@@ -1,0 +1,15 @@
+<div class="row">
+  <div class="col-md-10 offset-md-1" style="margin-top: 20px">
+    <ul class="breadcrumb">
+      <li><a href="javascript:void(0)" [routerLink]="'/home'">Trang chủ</a></li>
+      <li>Thương hiệu</li>
+    </ul>
+    <nz-card nzTitle="Thương hiệu">
+      <div nz-row>
+        <div (click)="filterBySupplier(item.note)" *ngFor="let item of listSupplier" class="sup-item" nz-col [nzLg]="3" [nzMd]="6">
+          <img style="width: 100%; height: 100px" [src]="baseFile + item.avatar" alt="{{ item.note }}" />
+        </div>
+      </div>
+    </nz-card>
+  </div>
+</div>

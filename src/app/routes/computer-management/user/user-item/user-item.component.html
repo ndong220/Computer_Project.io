@@ -1,0 +1,119 @@
+<nz-modal
+  [nzAutofocus]="null"
+  [(nzVisible)]="isVisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  nzMaskClosable="false"
+  (nzOnCancel)="handleCancel()"
+  [nzWidth]="700"
+>
+  <ng-template #modalTitle> {{ tittle }} </ng-template>
+
+  <ng-template #modalContent>
+    <form nz-form [formGroup]="form" (ngSubmit)="save()">
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="code">Username</nz-form-label>
+        <nz-form-control [nzSm]="17" [nzXs]="24" nzErrorTip="Username không được để trống!">
+          <input nz-input formControlName="username" id="code" placeholder="Nhập vào username" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Email</nz-form-label>
+        <nz-form-control [nzSm]="17" [nzXs]="24" nzErrorTip="Email không được để trống!">
+          <input nz-input formControlName="email" id="name" placeholder="Nhập vào Email" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="name" nzRequired>
+          <span>Tên</span>
+        </nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Nhập vào tên!">
+          <input nz-input id="name" placeholder="Tên" formControlName="name" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="phoneNumber" nzRequired>Số điện thoại</nz-form-label>
+        <nz-form-control
+          [nzSm]="14"
+          [nzXs]="24"
+          [nzValidateStatus]="form.controls['phoneNumber']"
+          nzErrorTip="Vui lòng nhập số điện thoại!"
+        >
+          <nz-input-group [nzAddOnBefore]="addOnBeforeTemplate">
+            <ng-template #addOnBeforeTemplate>
+              <nz-select formControlName="phoneNumberPrefix" class="phone-select">
+                <nz-option nzLabel="+84" nzValue="+84"></nz-option>
+              </nz-select>
+            </ng-template>
+            <input formControlName="phoneNumber" id="'phoneNumber'" nz-input />
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="birthdate" nzRequired>
+          <span>Ngày sinh</span>
+        </nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Nhập vào ngày sinh!">
+          <nz-date-picker style="width: 60%" [nzPlaceHolder]="'Nhập vào ngày sinh'" formControlName="birthdate"> </nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item nz-row>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="status">Trạng thái</nz-form-label>
+        <nz-form-control [nzSpan]="17">
+          <nz-switch formControlName="status" nzSize="small" style="margin-right: 5px"></nz-switch>
+          <label>
+            <nz-tag [nzColor]="'#00BB00'" [hidden]="!form.value.status">Hoạt động</nz-tag>
+            <nz-tag [nzColor]="'#EF5350'" [hidden]="form.value.status">Không hoạt động</nz-tag>
+          </label>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-secondary"
+      *ngIf="isInfo && btnEdit.visible && btnEdit.grandAccess"
+      (click)="btnEdit.click($event)"
+    >
+      <i nz-icon nzType="edit" nzTheme="fill"></i>{{ btnEdit.title }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-primary"
+      *ngIf="!isInfo && btnSave.visible && btnSave.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnSave.click($event)"
+    >
+      <i nz-icon nzType="save" nzTheme="fill"></i>{{ btnSave.title }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-primary"
+      *ngIf="!isInfo && !isEdit && btnSaveAndCreate.visible && btnSaveAndCreate.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnSaveAndCreate.click($event)"
+    >
+      <i nz-icon nzType="save" nzTheme="fill"></i>{{ btnSaveAndCreate.title }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-warning"
+      *ngIf="btnCancel.visible && btnCancel.grandAccess"
+      (click)="btnCancel.click($event)"
+    >
+      <i nz-icon nzType="close-circle" nzTheme="fill"></i>{{ btnCancel.title }}
+    </button>
+  </ng-template>
+</nz-modal>

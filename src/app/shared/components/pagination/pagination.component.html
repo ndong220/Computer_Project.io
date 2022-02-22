@@ -1,0 +1,20 @@
+<nz-row>
+  <nz-col nzSm="12" nzXS="24" nzMd="12">
+    <span [innerHTML]="paginationMessage"></span>
+  </nz-col>
+  <nz-col nzSm="12" nzXS="24" nzMd="12" class="right">
+    <div class="cs-pagination">
+      <nz-pagination
+        [(nzPageIndex)]="filter.pageNumber"
+        [(nzPageSize)]="filter.pageSize"
+        [nzTotal]="grid?.totalData"
+        (nzPageIndexChange)="onPageNumberChange()"
+        (nzPageSizeChange)="onPageSizeChange()"
+        [nzPageSizeOptions]="pageSizeOptions"
+        nzShowSizeChanger
+        nzShowQuickJumper
+      >
+      </nz-pagination>
+    </div>
+  </nz-col>
+</nz-row>

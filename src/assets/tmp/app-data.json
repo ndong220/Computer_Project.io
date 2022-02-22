@@ -1,0 +1,127 @@
+{
+    "app": {
+      "name": "Vân Anh Shop",
+      "description": "Dashboard",
+      "year": 2021
+    },
+    "user": {
+      "name": "Admin",
+      "avatar": "./assets/tmp/img/avatar.jpg",
+      "email": "cipchk@qq.com"
+    },
+    "menu": [
+      {
+        "text": "Menu",
+        "i18n": "menu.main",
+        "group": true,
+        "hideInBreadcrumb": true,
+        "children": [
+          {
+            "text": "Trang chủ",
+            "i18n": "menu.dashboard",
+            "icon": "anticon anticon-dashboard",
+            "link": "/admin/dashboard"
+          }, 
+          {
+            "text": "Quản lý danh mục",
+            "i18n": "Quản lý danh mục",
+            "hideInBreadcrumb": true,
+            "icon": "anticon anticon-rocket",
+            "shortcutRoot": true,
+            "children": [
+              {
+                "text": "Tag",
+                "i18n": "Tag",
+                "hideInBreadcrumb": true,
+                "icon": "anticon anticon-dashboard",
+                "link": "/admin/computer-management/tag"
+              },
+              {
+                "text": "Nhà cung cấp",
+                "i18n": "Nhà cung cấp",
+                "hideInBreadcrumb": true,
+                "icon": "anticon anticon-dashboard",
+                "link": "/admin/computer-management/supplier"
+              }
+              ,
+              {
+                "text": "Voucher",
+                "i18n": "Voucher",
+                "hideInBreadcrumb": true,
+                "icon": "anticon anticon-dashboard",
+                "link": "/admin/computer-management/voucher"
+              }
+            ]
+           },
+          {
+           "text": "Quản lý sản phẩm",
+           "i18n": "Quản lý sảm phẩm",
+           "hideInBreadcrumb": false,
+           "icon": "anticon anticon-rocket",
+           "shortcutRoot": true,
+           "children": [
+             {
+               "text": "Loại sản phẩm",
+               "i18n": "Loại sản phẩm",
+               "hideInBreadcrumb": true,
+               "icon": "anticon anticon-dashboard",
+               "link": "/admin/computer-management/category"
+             },             {
+              "text": "Thông tin sản phẩm",
+              "i18n": "Thông tin sản phẩm",
+              "hideInBreadcrumb": true,
+              "icon": "anticon anticon-dashboard",
+              "link": "/admin/computer-management/category-meta"
+            },
+             {
+              "text": "Sản phẩm",
+              "i18n": "Sản phẩm",
+              "hideInBreadcrumb": true,
+              "icon": "anticon anticon-dashboard",
+              "link": "/admin/computer-management/product"
+            }
+           ]
+          },
+          {
+            "text": "Quản lý đơn đặt",
+            "i18n": "Quản lý đơn đặt",
+            "hideInBreadcrumb": true,
+            "icon": "anticon anticon-rocket",
+            "shortcutRoot": true,
+            "children": [
+              {
+                "text": "Đơn đặt hàng",
+                "i18n": "Đơn đặt hàng",
+                "hideInBreadcrumb": true,
+                "icon": "anticon anticon-dashboard",
+                "link": "/admin/computer-management/order"
+              }
+            ]
+           },
+           {
+            "text": "Quản trị hệ thống",
+            "i18n": "Quản trị hệ thống",
+            "hideInBreadcrumb": true,
+            "icon": "anticon anticon-rocket",
+            "shortcutRoot": true,
+            "children": [
+              {
+                "text": "Tài khoản",
+                "i18n": "Tài khoản",
+                "hideInBreadcrumb": true,
+                "icon": "anticon anticon-dashboard",
+                "link": "/admin/computer-management/user"
+              },  {
+                "text": "Bình luận",
+                "i18n": "Bình luận",
+                "hideInBreadcrumb": true,
+                "icon": "anticon anticon-dashboard",
+                "link": "/admin/computer-management/product-review"
+              }
+            ]
+           }
+        ]
+      }
+    ]
+  }
+  

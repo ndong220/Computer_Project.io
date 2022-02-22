@@ -1,0 +1,267 @@
+<!-- Start header section -->
+<header id="aa-header">
+  <!-- start header top  -->
+  <div class="aa-header-top">
+    <div class="">
+      <div class="row">
+        <div class="col-md-12">
+          <nav style="margin: 0; border: 0" class="navbar navbar-expand-lg navbar-light bg-light">
+            <a href="javascript:void(0)" [routerLink]="['/home']" class="navbar-brand">Vân Anh<b> Computer</b></a>
+            <!-- Collection of nav links, forms, and other content for toggling -->
+            <div id="navbarCollapse" class="collapse navbar-collapse pull-right">
+              <div class="navbar-nav">
+                <a href="javascript:void(0)" (click)="showModal()" *ngIf="isLogin === false" class="login nav-link">Đăng nhập</a>
+                <a href="javascript:void(0)" *ngIf="isLogin === true" [routerLink]="['/account-detail']" class="nav-link login"
+                  >Thông tin tài khoản</a
+                >
+                <a href="javascript:void(0)" *ngIf="isLogin === false" [routerLink]="['/register']" class="btn btn-primary sign-up-btn"
+                  >Đăng ký</a
+                >
+                <a href="javascript:void(0)" *ngIf="isLogin === true" (click)="logout()" class="btn btn-primary sign-up-btn">Đăng xuất</a>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- / header top  -->
+
+  <!-- start header bottom  -->
+  <div class="aa-header-bottom">
+    <div class="">
+      <div class="row">
+        <div class="item-center col-md-10 offset-md-1">
+          <div class="aa-header-bottom-area item-center">
+            <!-- logo  -->
+            <!-- <img src="../../../../assets/img/Logo.png" alt=""> -->
+            <div class="aa-logo">
+              <!-- Text based logo -->
+              <a href="javascript:void(0)" [routerLink]="['/home']">
+                <!-- <span class="fas fa-laptop"></span> -->
+                <img height="106" style="width: 100%" src="../../../../assets/img/Logo.png" alt="Logo" />
+                <!-- <p>Vân Anh<strong>Computer</strong> <span>Thế giới máy tính</span></p> -->
+              </a>
+              <!-- img based logo -->
+              <!-- <a href="index.html"><img src="../../../../../assets/tmp/img/logo.jpg" alt="logo img"></a> -->
+            </div>
+            <!-- / logo  -->
+
+            <!-- search box -->
+            <div class="aa-search-box col-md-8" style="padding-right: 0; padding-left: 0">
+              <form action="">
+                <input
+                  #search
+                  autocomplete="off"
+                  type="text"
+                  name=""
+                  [ngModelOptions]="{ standalone: true }"
+                  [(ngModel)]="textSearch"
+                  id="text-search-box"
+                  (keyup.enter)="enterSearch()"
+                  (ngModelChange)="changeText()"
+                  placeholder="Nhập từ khóa tìm kiếm... "
+                /><i class="fas fa-search" aria-hidden="true"></i>
+                <div #searchResult [ngStyle]="{ display: isChangeText === true ? 'block' : 'none' }" class="text-search-result">
+                  <div *ngIf="listProd.length === 0" class="row">
+                    <div class="col-md-12 item-center" style="height: 300px">
+                      <nz-empty [nzNotFoundContent]="'Không có kết quả'"></nz-empty>
+                    </div>
+                    <div *ngIf="isLoadingFilter" class="col-md-12 item-center" style="height: 300px">
+                      <nz-spin nzSimple></nz-spin>
+                    </div>
+                  </div>
+                  <div style="margin: 15px; cursor: pointer" (click)="viewDetail(item.code)" class="row" *ngFor="let item of listProd">
+                    <div class="col-md-2">
+                      <img [src]="baseFile + item.pictures[0]" width="70px" height="70px" alt="" />
+                    </div>
+                    <div class="col-md-10">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <h5>{{ item.name }}</h5>
+                        </div>
+                        <div class="col-md-12">
+                          <span *ngIf="item.discount !== 0" class="price-text">{{ item.price | currency: 'VND' }}</span>
+                          <span>{{ ' ' }}</span>
+                          <span class="real-price-text">{{ item.price - item.discount | currency: 'VND' }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <!-- / search box -->
+            <!-- cart box -->
+            <div class="aa-cartbox col-md-1">
+              <div class="dropdown">
+                <a class="aa-cart-link dropbtn" [routerLink]="'/cart-detail'" href="javascript:void(0)">
+                  <span class="fas fa-shopping-basket"></span>
+                  <span class="aa-cart-title">Giỏ hàng</span>
+                  <span class="aa-cart-notify">{{ listCart.length > 0 ? listCart.length : 0 }}</span>
+                </a>
+                <div class="dropdown-content">
+                  <div class="row">
+                    <div style="height: 250px" class="col-md-12 overflow-auto">
+                      <div *ngFor="let item of listCart" class="row">
+                        <div class="col-md-3">
+                          <img width="80" height="80" [src]="baseFile + item.pictures[0]" [alt]="'image product' + item.code" />
+                        </div>
+                        <div class="col-md-2 item-center">
+                          <div class="form-group">
+                            <input
+                              [value]="item.count"
+                              type="number"
+                              [min]="1"
+                              (ngModelChange)="changeCount($event, item)"
+                              class="form-control"
+                              name=""
+                              id=""
+                              [(ngModel)]="item.count"
+                              placeholder=""
+                            />
+                          </div>
+                        </div>
+                        <div class="col-md-5">
+                          <div class="row">
+                            <div class="col-md-12">
+                              <span style="cursor: pointer" (click)="viewDetail(item.code)" [title]="item.name" class="name-text">{{
+                                item.name
+                              }}</span>
+                            </div>
+                          </div>
+                          <span class="price-prod">{{ item.subTotal | currency: 'VND' | lowercase }}</span>
+                        </div>
+                        <div class="col-md-2 item-center">
+                          <i style="margin-right: 5px" [routerLink]="'/cart-detail'" class="fas fa-pencil-alt"></i>
+                          <i (click)="removeItem(item)" class="fas fa-trash"></i>
+                        </div>
+                      </div>
+                      <div *ngIf="listCart.length === 0" class="col-sm-12 empty-cart-cls text-center">
+                        <img src="https://i.imgur.com/dCdflKN.png" width="130" height="130" class="img-fluid mb-4 mr-3" />
+                        <h3><strong>Giỏ hàng của bạn đang trống</strong></h3>
+                        <h4>Hãy tiếp tục mua sắn bạn nhé :)</h4>
+                      </div>
+                    </div>
+                  </div>
+                  <span class="price-prod">Tổng cộng: {{ total | currency: 'VND' | lowercase }}</span>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <a class="aa-cartbox-checkout aa-primary-btn" [routerLink]="'/cart-detail'" href="javascript:void(0)"
+                        >Đi tới giỏ hàng</a
+                      >
+                    </div>
+                    <div class="col-md-6">
+                      <a class="aa-cartbox-checkout aa-primary-btn" [routerLink]="'/checkout'" href="javascript:void(0)">Thanh toán ngay</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- / cart box -->
+            <div *ngIf="isLogin" class="col-md-1">
+              <a nz-dropdown [nzDropdownMenu]="menu">
+                <nz-avatar nzSize="large" [nzSrc]="avatar" nzIcon="user"></nz-avatar>
+              </a>
+              <nz-dropdown-menu #menu="nzDropdownMenu">
+                <ul nz-menu nzSelectable>
+                  <li nz-menu-item>
+                    <i nz-icon nzType="info" nzTheme="outline"></i>Xin chào
+                    <b>{{ userName }}</b>
+                  </li>
+                  <li nz-menu-item (click)="navigate('http://localhost:4200/account-detail?type=0')">
+                    <i nz-icon nzType="user" nzTheme="outline"></i> Thông tin tài khoản
+                  </li>
+                  <li nz-menu-item (click)="navigate('http://localhost:4200/account-detail?type=1')">
+                    <i nz-icon nzType="bars" nzTheme="outline"></i> Đơn mua
+                  </li>
+                  <li nz-menu-item (click)="navigate('http://localhost:4200/account-detail?type=3')">
+                    <i nz-icon nzType="setting" nzTheme="outline"></i> Đổi mật khẩu
+                  </li>
+                  <li nz-menu-item (click)="logout()"><i nz-icon nzType="logout" nzTheme="outline"></i> Đăng xuất</li>
+                </ul>
+              </nz-dropdown-menu>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- / header bottom  -->
+</header>
+<!-- / header section -->
+<nz-modal
+  [nzAutofocus]="null"
+  [(nzVisible)]="isVisible"
+  [nzAutofocus]="null"
+  nzTitle="Đăng nhập"
+  nzWidth="700px"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="formLogin" class="login-form" (ngSubmit)="submitForm()">
+      <nz-form-item>
+        <nz-form-label [nzSm]="24" [nzXs]="24" nzRequired nzFor="username">Tài khoản hoặc Email </nz-form-label>
+        <nz-form-control nzErrorTip="Vui lòng nhập tài khoản!">
+          <nz-input-group nzPrefixIcon="user">
+            <input type="text" nz-input formControlName="username" placeholder="Username" />
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSm]="24" [nzXs]="24" nzRequired nzFor="username">Mật khẩu</nz-form-label>
+        <nz-form-control nzErrorTip="Vui lòng nhập mật khẩu!">
+          <nz-input-group [nzSuffix]="suffixTemplate">
+            <input [type]="passwordVisible ? 'text' : 'password'" nz-input placeholder="input password" formControlName="password" />
+          </nz-input-group>
+          <ng-template #suffixTemplate>
+            <i nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'" (click)="passwordVisible = !passwordVisible"></i>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="recaptcha" nzRequired>Captcha: </nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24" [nzValidateStatus]="formLogin.controls['recaptcha']" nzErrorTip="Trường này là bắt buộc!">
+          <ngx-recaptcha2
+            #captchaElem
+            [siteKey]="reCaptchaKey"
+            [useGlobalDomain]="false"
+            [size]="'normal'"
+            [hl]="'vi'"
+            [theme]="'light'"
+            [type]="'image'"
+            formControlName="recaptcha"
+          >
+          </ngx-recaptcha2>
+        </nz-form-control>
+      </nz-form-item>
+      <div nz-row class="login-form-margin">
+        <div nz-col [nzSpan]="12">
+          <label nz-checkbox formControlName="rememberMe">
+            <span>Nhớ mật khẩu</span>
+          </label>
+        </div>
+      </div>
+      <button
+        nz-col
+        [nzSpan]="24"
+        style="width: 100%"
+        [nzLoading]="isLoading"
+        nz-button
+        class="login-form-button login-form-margin"
+        [nzType]="'primary'"
+      >
+        Đăng nhập
+      </button>
+      <div class="twitter">
+        <a href="javascript:void(0)" (click)="signInWithGoogle()"><i class="fab fa-google"></i> Sign in With Google</a>
+      </div>
+      <div class="facebook">
+        <a href="javascript:void(0)" (click)="signInWithFB()"><i class="fab fa-facebook-f"></i>Sign in With Facebook</a>
+      </div>
+      <p class="aa-lost-password"><a href="javascript:void(0)" [routerLink]="['/forgot-password']">Quên mật khẩu?</a></p>
+      <div class="aa-register-now">Bạn chưa có tài khoản?<a [routerLink]="['/register']" href="javascript:void(0)">Đăng ký ngay!</a></div>
+    </form>
+  </ng-container>
+  <div *nzModalFooter></div>
+</nz-modal>

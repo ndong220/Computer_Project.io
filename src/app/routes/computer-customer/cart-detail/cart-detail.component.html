@@ -1,0 +1,151 @@
+<div class="row">
+  <div class="col-md-10 offset-md-1">
+    <h2 style="padding-top: 20px; text-align: center">Giỏ hàng</h2>
+    <ul class="breadcrumb">
+      <li><a href="javascript:void(0)" [routerLink]="'/home'">Trang chủ</a></li>
+      <li>Giỏ hàng của bạn</li>
+    </ul>
+    <div class="">
+      <div class="row">
+        <div class="col-lg-12 p-5 bg-white rounded shadow-sm mb-5">
+          <!-- <nz-breadcrumb>
+                        <nz-breadcrumb-item>
+                            <a href="" [routerLink]="'/home'"><i nz-icon nzType="home"></i></a>
+                        </nz-breadcrumb-item>
+                        <nz-breadcrumb-item>
+                            <i class="fab fa-car-alt    "></i><span>Giỏ hàng</span>
+                        </nz-breadcrumb-item>
+                    </nz-breadcrumb> -->
+          <!-- Shopping cart table -->
+          <button style="float: right" type="button" (click)="getListCart()" class="btn btn-danger">Cập nhật giỏ hàng</button>
+          <div *ngIf="listCart.length === 0" class="col-sm-12 empty-cart-cls text-center">
+            <img src="https://i.imgur.com/dCdflKN.png" width="130" height="130" class="img-fluid mb-4 mr-3" />
+            <h3><strong>Giỏ hàng của bạn đang trống</strong></h3>
+            <h4>Hãy tiếp tục mua sắn bạn nhé :)</h4>
+            <h4><button type="button" [routerLink]="'/home'" class="btn btn-success">Tiếp tục mua sắm</button></h4>
+          </div>
+          <div class="table-responsive">
+            <table *ngIf="listCart.length > 0" class="table">
+              <thead>
+                <tr>
+                  <th scope="col" class="border-0 bg-light">
+                    <div class="p-2 px-3 text-uppercase">Sản phẩm</div>
+                  </th>
+                  <th scope="col" class="border-0 bg-light">
+                    <div class="py-2 text-uppercase">Giá</div>
+                  </th>
+                  <th scope="col" class="border-0 bg-light">
+                    <div class="py-2 text-uppercase">Số lượng</div>
+                  </th>
+                  <th scope="col" class="border-0 bg-light">
+                    <div class="py-2 text-uppercase">Thao tác</div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of listCart">
+                  <td scope="row" class="border-0">
+                    <div class="col-md-2 item-center">
+                      <img [src]="baseFile + item.pictures[0]" alt="" width="70" class="img-fluid rounded shadow-sm" />
+                    </div>
+                    <div class="col-md-7 item-center">
+                      <div class="d-inline-block align-middle">
+                        <h5 class="">
+                          <a href="javascript:void(0)" (click)="viewDetail(item.code)" class="text-dark d-inline-block align-middle">{{
+                            item.name
+                          }}</a>
+                        </h5>
+                        <span class="text-muted font-weight-normal font-italic d-block"
+                          >Loại sản phẩm: <span>{{ item.categoryName.toString() }}</span></span
+                        >
+                      </div>
+                    </div>
+                  </td>
+                  <td style="height: 70px" class="border-0 align-middle item-center">
+                    <strong> {{ item.price - item.discount | currency: 'VND' | lowercase }}</strong>
+                  </td>
+                  <td style="width: 50px" class="border-0 align-middle">
+                    <div class="form-group item-center">
+                      <input
+                        [value]="item.count"
+                        type="number"
+                        [min]="1"
+                        (ngModelChange)="changeCount($event, item)"
+                        class="form-control"
+                        name=""
+                        id=""
+                        [(ngModel)]="item.count"
+                        placeholder=""
+                      />
+                    </div>
+                  </td>
+                  <td class="border-0 align-middle">
+                    <a href="javascript:void(0)" (click)="removeItem(item)" class="text-dark item-center"><i class="fas fa-trash"></i></a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- End -->
+        </div>
+      </div>
+
+      <div class="row py-5 p-4 bg-white rounded shadow-sm">
+        <div class="col-lg-6">
+          <div class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold">Mã giảm giá</div>
+          <div class="p-4">
+            <p class="font-italic mb-4">Nếu bạn có mã giảm giá, hãy nhập nó vào ô bên dưới</p>
+            <div class="input-group mb-4 border rounded-pill p-2">
+              <div class="col-md-10">
+                <input type="text" placeholder="Nhập mã giảm giá" aria-describedby="button-addon3" class="form-control border-0" />
+              </div>
+              <div class="col-md-2">
+                <button id="button-addon3" type="button" class="btn btn-success px-4 rounded-pill">
+                  <i class="fa fa-gift mr-2"></i>Áp dụng
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold">HƯỚNG DẪN CHO NGƯỜI BÁN</div>
+          <div class="p-4">
+            <p class="font-italic mb-4">Nếu bạn có một số thông tin cho người bán, bạn có thể để lại trong hộp bên dưới</p>
+            <textarea name="" cols="30" rows="2" class="form-control"></textarea>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold">Đơn hàng tổng quát</div>
+          <div class="p-4">
+            <span>
+              <nz-radio-group [(ngModel)]="radioValue">
+                <div nz-row>
+                  <label (click)="changeShipping($event)" nz-radio [nzValue]="1">Tiêu chuẩn(miễn phí)</label>
+                </div>
+                <div nz-row>
+                  <label (click)="changeShipping($event)" nz-radio [nzValue]="2">Siêu Tốc 2h -Nội thành HCM và HN: 20.000₫</label>
+                </div>
+              </nz-radio-group>
+            </span>
+            <ul class="list-unstyled mb-4">
+              <li class="d-flex justify-content-between py-3 border-bottom">
+                <strong class="text-muted">Giá tạm tính </strong><strong>{{ total | currency: 'VND' | lowercase }}</strong>
+              </li>
+              <li class="d-flex justify-content-between py-3 border-bottom">
+                <strong class="text-muted">Phí vận chuyển</strong><strong>{{ shipping | currency: 'VND' | lowercase }}</strong>
+              </li>
+              <li class="d-flex justify-content-between py-3 border-bottom">
+                <strong class="text-muted">Mã giảm giá</strong><strong>{{ shipping | currency: 'VND' | lowercase }}</strong>
+              </li>
+              <li class="d-flex justify-content-between py-3 border-bottom">
+                <strong class="text-muted">Tổng cộng</strong>
+                <strong>{{ shipping + total | currency: 'VND' | lowercase }}</strong>
+              </li>
+            </ul>
+            <a href="javascript:void(0)" [routerLink]="'/checkout'" class="btn btn-success rounded-pill py-2 btn-block"
+              >Tiến hành thanh toán</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

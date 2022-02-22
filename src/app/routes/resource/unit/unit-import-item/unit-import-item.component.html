@@ -1,0 +1,93 @@
+<nz-modal
+  [nzAutofocus]="null"
+  [(nzVisible)]="isVisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  nzMaskClosable="false"
+  nzWidth="900px"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-template #modalTitle> {{ tittle }} </ng-template>
+
+  <ng-template #modalContent>
+    <nz-row>
+      <nz-col nzMd="24">
+        <i>Click đúp chuột vào từng cell để sửa dữ liệu, sau đó nhấn <b>"Lưu"</b> để lưu dữ liệu vào hệ thống</i>
+      </nz-col>
+    </nz-row>
+    <nz-row>
+      <ag-grid-angular
+        #deleteGrid
+        style="width: 100%; height: 350px"
+        id="deleteGrid"
+        class="ag-theme-alpine"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        [suppressRowClickSelection]="true"
+        [rowData]="rowData"
+        [frameworkComponents]="frameworkComponents"
+        [overlayLoadingTemplate]="overlayLoadingTemplate"
+        [overlayNoRowsTemplate]="overlayNoRowsTemplate"
+        [excelStyles]="excelStyles"
+        (gridReady)="onGridReady($event)"
+      >
+      </ag-grid-angular>
+    </nz-row>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-dark"
+      *ngIf="btnDownload.visible && btnDownload.grandAccess && !isCompleteImport"
+      (click)="btnDownload.click($event)"
+    >
+      <i nz-icon nzType="download" nzTheme="outline"></i>{{ btnDownload.title }}
+    </button>
+    <nz-upload
+      [nzTransformFile]="transformFile"
+      *ngIf="btnUpload.visible && btnUpload.grandAccess && !isCompleteImport"
+      style="display: inline-block; margin-right: 8px; margin-left: 8px"
+    >
+      <button nz-button nzType="primary" class="btn-excel"><i nz-icon nzType="upload"></i>{{ btnUpload.title }}</button>
+    </nz-upload>
+    <button
+      nz-button
+      nzType="default"
+      *ngIf="btnReset.visible && btnReset.grandAccess && !isCompleteImport"
+      (click)="btnReset.click($event)"
+    >
+      <i nz-icon nzType="reload" nzTheme="outline"></i>{{ btnReset.title }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-primary"
+      *ngIf="btnSave.visible && btnSave.grandAccess && !isCompleteImport"
+      [nzLoading]="isLoading"
+      (click)="btnSave.click($event)"
+    >
+      <i nz-icon nzType="save" nzTheme="fill"></i>{{ btnSave.title }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-warning"
+      *ngIf="btnCancel.visible && btnCancel.grandAccess && !isCompleteImport"
+      (click)="btnCancel.click($event)"
+    >
+      <i nz-icon nzType="close-circle" nzTheme="fill"></i>{{ btnCancel.title }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-success"
+      *ngIf="btnClose.visible && btnClose.grandAccess && isCompleteImport"
+      (click)="btnClose.click($event)"
+    >
+      <i nz-icon nzType="close-circle" nzTheme="fill"></i>{{ btnClose.title }}
+    </button>
+  </ng-template>
+</nz-modal>

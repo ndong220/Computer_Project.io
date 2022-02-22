@@ -1,0 +1,159 @@
+<style>
+  .username {
+    margin-right: 15px;
+    color: #000;
+    font-weight: normal;
+    font-size: 12px;
+    font-family: 'OpenSans', sans-serif;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+  }
+
+  .text-add {
+    color: black;
+    font-weight: bold;
+    font-size: 12px;
+    font-family: 'OpenSans', sans-serif;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 60px;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+  }
+
+  .btn {
+    margin-right: 10px;
+    background-color: white;
+    border: 1px solid transparent !important;
+    cursor: pointer;
+  }
+</style>
+<span *ngIf="!token" style="line-height: 60px; cursor: pointer" (click)="login()" class="text-add">Đăng nhập</span>
+<div *ngIf="token" nz-dropdown [nzDropdownMenu]="userMenu" nzPlacement="bottomRight" class="alain-pro__header-item header-user">
+  <span [ngClass]="{ username: homePageCheck }">{{ user.name }} &nbsp; </span>
+  <nz-avatar [nzSrc]="settings.user.avatar" nzSize="medium" class="mr-sm"></nz-avatar>
+  <i *ngIf="homePageCheck" nz-icon nzType="caret-down" nzTheme="outline"></i>
+</div>
+<nz-dropdown-menu #userMenu="nzDropdownMenu">
+  <div *ngIf="token" nz-menu class="width-sm">
+    <div nz-menu-item routerLink="/pro/account/center">
+      <i nz-icon nzType="user" class="mr-sm"></i>
+      {{ 'menu.account.center' | translate }}
+    </div>
+    <div (click)="showModal()" nz-menu-item>
+      <i nz-icon nzType="user" class="mr-sm"></i>
+      {{ 'menu.account.change-password' | translate }}
+    </div>
+    <li nz-menu-divider></li>
+    <div nz-menu-item (click)="logout()">
+      <i nz-icon nzType="logout" class="mr-sm"></i>
+      {{ 'menu.account.logout' | translate }}
+    </div>
+  </div>
+</nz-dropdown-menu>
+
+<nz-modal
+  [nzAutofocus]="null"
+  nzWidth="600px"
+  [nzFooter]="modalFooter"
+  [(nzVisible)]="isVisible"
+  nzTitle="Thay đổi mật khẩu"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="form" (ngSubmit)="save()">
+      <nz-form-item>
+        <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired nzFor="oldPassword">Mật khẩu cũ</nz-form-label>
+        <nz-form-control [nzSm]="16" [nzXs]="24" nzHasFeedback [nzErrorTip]="validateOldPassword">
+          <nz-input-group [nzSuffix]="oldPasswordSubfix">
+            <input
+              formControlName="oldPassword"
+              id="oldPassword"
+              [type]="passwordVisible ? 'text' : 'password'"
+              nz-input
+              placeholder="Nhập mật khẩu cũ"
+            />
+          </nz-input-group>
+          <ng-template #oldPasswordSubfix>
+            <i nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'" (click)="passwordVisible = !passwordVisible"></i>
+          </ng-template>
+          <ng-template #validateOldPassword let-control>
+            <ng-container *ngIf="control.hasError('minlength')"> Tối thiểu 6 ký tự.</ng-container>
+            <ng-container *ngIf="control.hasError('required')"> Trường thông tin bắt buộc.</ng-container>
+            <ng-container *ngIf="control.hasError('invalidPw')"> Mật khẩu cũ không chính xác.</ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired nzFor="newPassword">Mật khẩu mới</nz-form-label>
+        <nz-form-control [nzSm]="16" [nzXs]="24" nzHasFeedback [nzErrorTip]="validateNewPassword">
+          <nz-input-group [nzSuffix]="newPasswordSubfix">
+            <input
+              formControlName="newPassword"
+              id="newPassword"
+              [type]="newPasswordVisible ? 'text' : 'password'"
+              nz-input
+              placeholder="Nhập mật khẩu mới"
+            />
+          </nz-input-group>
+          <ng-template #newPasswordSubfix>
+            <i nz-icon [nzType]="newPasswordVisible ? 'eye-invisible' : 'eye'" (click)="newPasswordVisible = !newPasswordVisible"></i>
+          </ng-template>
+          <ng-template #validateNewPassword let-control>
+            <ng-container *ngIf="control.hasError('minlength')"> Tối thiểu 6 ký tự.</ng-container>
+            <ng-container *ngIf="control.hasError('required')"> Trường thông tin bắt buộc.</ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired nzFor="confirmPassword">Xác nhận mật khẩu</nz-form-label>
+        <nz-form-control [nzSm]="16" [nzXs]="24" nzHasFeedback [nzErrorTip]="validateConfirmPassword">
+          <nz-input-group [nzSuffix]="confirmPasswordSubfix">
+            <input
+              (ngModelChange)="checkConfirmPassword()"
+              formControlName="confirmPassword"
+              id="oldPassword"
+              [type]="confirmPasswordVisible ? 'text' : 'password'"
+              nz-input
+              placeholder="Nhập mật khẩu xác nhận"
+            />
+          </nz-input-group>
+          <ng-template #confirmPasswordSubfix>
+            <i
+              nz-icon
+              [nzType]="confirmPasswordVisible ? 'eye-invisible' : 'eye'"
+              (click)="confirmPasswordVisible = !confirmPasswordVisible"
+            ></i>
+          </ng-template>
+          <ng-template #validateConfirmPassword let-control>
+            <ng-container *ngIf="control.hasError('minlength')"> Tối thiểu 6 ký tự.</ng-container>
+            <ng-container *ngIf="control.hasError('required')"> Trường thông tin bắt buộc.</ng-container>
+            <ng-container *ngIf="control.hasError('invalidConfirmPw')"> Xác nhận mật khẩu không hợp lệ.</ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-modal>
+<ng-template #modalFooter>
+  <button nz-button nzType="primary" (click)="save()" class="btn-primary"><i nz-icon nzType="save" nzTheme="fill"></i>Đổi mật khẩu</button>
+  <!-- <button
+    nz-button
+    nzType="primary"
+    class="btn-primary"
+    *ngIf="!isInfo && !isEdit && btnSaveAndCreate.visible && btnSaveAndCreate.grandAccess"
+    [nzLoading]="isLoading"
+    (click)="btnSaveAndCreate.click($event)"
+  >
+    <i nz-icon nzType="save" nzTheme="fill"></i>{{ btnSaveAndCreate.title }}
+  </button> -->
+  <button nz-button (click)="handleCancel($event)" nzType="primary" class="btn-warning">
+    <i nz-icon nzType="close-circle" nzTheme="fill"></i>Đóng
+  </button>
+</ng-template>

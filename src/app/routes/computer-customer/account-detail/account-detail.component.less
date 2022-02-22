@@ -1,0 +1,288 @@
+.item-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.offset {
+  right: 10%;
+  left: 10%;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+.img-price {
+  width: 3.5rem;
+  height: 3.5rem;
+}
+.price-out {
+  text-decoration: line-through;
+}
+.flex-block {
+  flex-direction: column;
+}
+.border {
+  height: 0.5rem;
+  background: repeating-linear-gradient(
+    45deg,
+    #6fa6d6,
+    #6fa6d6 33px,
+    transparent 0,
+    transparent 41px,
+    #f18d9b 0,
+    #f18d9b 74px,
+    transparent 0,
+    transparent 82px
+  );
+}
+.text-highlight {
+  color: white;
+  background-color: #ee4d2d;
+}
+.warpper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.text-name-order {
+  color: blue;
+  font-style: italic;
+}
+.tab {
+  display: inline-block;
+  margin: 0 2px;
+  padding: 10px 20px;
+  color: #000;
+  text-align: center;
+  background: #fff;
+  border-radius: 3px 3px 0 0;
+  cursor: pointer;
+}
+.text-status {
+  color: red;
+  cursor: pointer;
+}
+.tabs {
+  width: 100%;
+}
+.panels {
+  width: 100%;
+  min-height: 200px;
+  overflow: hidden;
+  background: #fffffff6;
+}
+.panel {
+  display: none;
+  animation: fadein 0.8s;
+}
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.panel-title {
+  font-weight: bold;
+  font-size: 1.5em;
+}
+.radio {
+  display: none;
+}
+#one:checked ~ .panels #one-panel,
+#two:checked ~ .panels #two-panel,
+#three:checked ~ .panels #three-panel,
+#four:checked ~ .panels #four-panel,
+#five:checked ~ .panels #five-panel,
+#six:checked ~ .panels #six-panel {
+  display: block;
+}
+#one:checked ~ .tabs #one-tab,
+#two:checked ~ .tabs #two-tab,
+#three:checked ~ .tabs #three-tab,
+#four:checked ~ .tabs #four-tab,
+#five:checked ~ .tabs #five-tab,
+#six:checked ~ .tabs #six-tab {
+  color: red;
+  background: #fffffff6;
+  border-bottom: 3px solid red;
+}
+.fl-left {
+  float: left;
+}
+
+.fl-right {
+  float: right;
+}
+
+.container {
+  width: 90%;
+  margin: 100px auto;
+}
+
+h1 {
+  margin-bottom: 30px;
+  padding-left: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  border-left: 10px solid #fec500;
+}
+
+.row {
+  overflow: hidden;
+}
+
+.card {
+  position: relative;
+  display: table-row;
+  width: 100%;
+  height: 145px;
+  margin-bottom: 10px;
+  color: #989898;
+  font-family: 'Oswald', sans-serif;
+  text-transform: uppercase;
+  background-color: #fff;
+  border-radius: 4px;
+}
+
+.card + .card {
+  margin-left: 2%;
+}
+
+.date {
+  position: relative;
+  display: table-cell;
+  width: 35%;
+  height: 145px;
+  text-align: center;
+  background-color: #ee4e2e;
+  border-right: 2px dashed #dadde6;
+}
+
+// .date::before,
+// .date::after {
+//   position: absolute;
+//   top: -15px;
+//   right: -15px;
+//   z-index: 1;
+//   display: block;
+//   width: 30px;
+//   height: 30px;
+//   background-color: #dadde6;
+//   border-radius: 50%;
+//   content: '';
+// }
+
+.date::after {
+  top: auto;
+  bottom: -15px;
+}
+
+.date time {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.date time span {
+  display: block;
+  color: white;
+}
+
+.date time span:first-child {
+  color: white;
+  font-weight: 600;
+  font-size: 250%;
+}
+
+.date time span:last-child {
+  margin-top: -10px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.card-cont {
+  display: table-cell;
+  width: 75%;
+  padding: 10px 10px 30px 50px;
+  font-size: 85%;
+}
+
+.card-cont h3 {
+  color: #3c3c3c;
+  font-size: 130%;
+}
+
+.row:last-child .card:last-of-type .card-cont h3 {
+}
+
+.card-cont > div {
+  display: table-row;
+}
+
+.card-cont .even-date i,
+.card-cont .even-info i,
+.card-cont .even-date time,
+.card-cont .even-info p {
+  display: table-cell;
+}
+
+.card-cont .even-date i,
+.card-cont .even-info i {
+  padding: 5% 5% 0 0;
+}
+
+.card-cont .even-info p {
+  padding: 30px 50px 0 0;
+}
+
+.card-cont .even-date time span {
+  display: block;
+}
+
+.card-cont .selected {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  display: block;
+  width: 100px;
+  height: 30px;
+  color: #fff;
+  text-align: center;
+  text-decoration: none;
+  background-color: #d8dde0;
+  border: none;
+  border-radius: 2px;
+}
+
+.row:last-child .card:first-child .card-cont a {
+  background-color: #037fdd;
+}
+
+button:focus {
+  border: none !important;
+}
+.row:last-child .card:last-child .card-cont .selected {
+  background-color: #f8504c;
+}
+
+@media screen and (max-width: 860px) {
+  .card {
+    display: block;
+    float: none;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .card + .card {
+    margin-left: 0;
+  }
+
+  .card-cont .even-date,
+  .card-cont .even-info {
+    font-size: 75%;
+  }
+}

@@ -1,0 +1,136 @@
+@import '~@delon/theme/index';
+
+:host {
+  ::ng-deep {
+    .item-center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    body {
+      margin-top: 20px;
+      background: #fafafa;
+    }
+    .order-card {
+      color: #fff;
+    }
+
+    .bg-c-blue {
+      background: linear-gradient(45deg, #4099ff, #73b4ff);
+    }
+
+    .bg-c-green {
+      background: linear-gradient(45deg, #2ed8b6, #59e0c5);
+    }
+
+    .bg-c-yellow {
+      background: linear-gradient(45deg, #ffb64d, #ffcb80);
+    }
+
+    .bg-c-pink {
+      background: linear-gradient(45deg, #ff5370, #ff869a);
+    }
+
+    .card {
+      margin-bottom: 30px;
+      border: none;
+      border-radius: 5px;
+      -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
+      box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
+      -webkit-transition: all 0.3s ease-in-out;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .card .card-block {
+      min-height: 220px;
+      padding: 25px;
+    }
+
+    .order-card i {
+      font-size: 26px;
+    }
+    tr td,
+    th {
+      min-height: 100%;
+      text-align: center;
+      vertical-align: middle;
+    }
+    td {
+      padding-bottom: 10px;
+    }
+    .f-left {
+      float: left;
+    }
+
+    .f-right {
+      float: right;
+    }
+
+    .card-box {
+      position: relative;
+      min-height: 150px;
+      margin: 20px 0;
+      padding: 20px 10px 40px;
+      color: #fff;
+    }
+    .card-box:hover {
+      color: #f1f1f1;
+      text-decoration: none;
+    }
+    .card-box:hover .icon i {
+      font-size: 100px;
+      -webkit-transition: 1s;
+      transition: 1s;
+    }
+    .card-box .inner {
+      padding: 5px 10px 0 10px;
+    }
+    .card-box h3 {
+      margin: 0 0 8px 0;
+      padding: 0;
+      font-weight: bold;
+      font-size: 27px;
+      white-space: nowrap;
+      text-align: left;
+    }
+    .card-box p {
+      font-size: 15px;
+    }
+    .card-box .icon {
+      position: absolute;
+      top: auto;
+      right: 5px;
+      bottom: 5px;
+      z-index: 0;
+      color: rgba(0, 0, 0, 0.15);
+      font-size: 72px;
+    }
+    .card-box .card-box-footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      padding: 3px 0;
+      color: rgba(255, 255, 255, 0.8);
+      text-align: center;
+      text-decoration: none;
+      background: rgba(0, 0, 0, 0.1);
+    }
+    .card-box:hover .card-box-footer {
+      background: rgba(0, 0, 0, 0.3);
+    }
+    .bg-blue {
+      background-color: #00c0ef !important;
+    }
+    .bg-green {
+      background-color: #00a65a !important;
+    }
+    .bg-orange {
+      background-color: #f39c12 !important;
+    }
+    .bg-red {
+      background-color: #d9534f !important;
+    }
+  }
+}

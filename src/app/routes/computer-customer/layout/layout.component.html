@@ -1,0 +1,56 @@
+<!-- wpf loader Two -->
+<!-- <div id="wpf-loader-two">
+  <div class="wpf-loader-two-inner">
+    <span>Loading</span>
+  </div>
+</div> -->
+<!-- / wpf loader Two -->
+<!-- SCROLL TOP BUTTON -->
+
+<nz-back-top [nzTemplate]="tpl">
+  <ng-template #tpl>
+    <a class="scrollToTop" href="javascript:void(0)"><i class="fa fa-chevron-up"></i></a>
+  </ng-template>
+</nz-back-top>
+<!-- END SCROLL TOP BUTTON -->
+<app-header-cus></app-header-cus>
+
+<app-menu></app-menu>
+<!-- Start slider -->
+<div>
+  <!-- / slider -->
+  <!-- Start Promo section -->
+  <!-- <app-promo></app-promo> -->
+  <!-- / Promo section -->
+  <!-- Products section -->
+  <!-- <app-product-section></app-product-section> -->
+  <!-- / Products section -->
+  <!-- banner section -->
+  <!-- <app-banner></app-banner> -->
+  <!-- popular section -->
+  <!-- <app-popular></app-popular> -->
+  <!-- / popular section -->
+  <!-- Support section -->
+  <router-outlet></router-outlet>
+  <app-support></app-support>
+  <!-- / Support section -->
+</div>
+
+<!-- Subscribe section -->
+<app-subscribe></app-subscribe>
+<!-- / Subscribe section -->
+
+<!-- footer -->
+<app-footer></app-footer>
+<!-- / footer -->
+
+<!-- Login Modal -->
+<app-login></app-login>
+<!-- Your Plugin chat code -->
+<!-- Your Plugin chat code -->
+<div class="fb-customerchat" attribution="page_inbox" page_id="108827921354200"></div>
+<div>
+  <a class="hotline-fixed" href="tel:0394835311" title="Hotline">
+    <i nz-icon nzType="phone" nzTheme="outline"></i>
+  </a>
+</div>

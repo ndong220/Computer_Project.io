@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+form .title {
+  position: relative;
+  margin: 20px 0 10px 0;
+  font-weight: 600;
+  font-size: 30px;
+}
+.title-login {
+  color: #111;
+  font-weight: bold;
+  font-size: 20px;
+  font-family: 'Helvetica Neue', sans-serif;
+  line-height: 1;
+  letter-spacing: -1px;
+  text-align: center;
+}
+form .title::before {
+  position: absolute;
+  bottom: 3px;
+  left: 0;
+  width: 33px;
+  height: 4px;
+  background: linear-gradient(to right, #99004d 0%, #ff0080 100%);
+  border-radius: 5px;
+  content: '';
+}
+form .input-box {
+  position: relative;
+  width: 100%;
+  height: 45px;
+  margin-top: 25px;
+}
+form .input-box input {
+  width: 100%;
+  height: 100%;
+  font-size: 16px;
+  border: none;
+  outline: none;
+}
+.error {
+  color: red;
+}
+form .underline::before {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #ccc;
+  content: '';
+}
+form .underline::after {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(to right, #99004d 0%, #ff0080 100%);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: all 0.3s ease;
+  content: '';
+}
+form .input-box input:focus ~ .underline::after,
+form .input-box input:valid ~ .underline::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+form .button {
+  margin: 40px 0 20px 0;
+}
+.input-box input[type='submit'] {
+  color: #fff;
+  font-size: 17px;
+  background: linear-gradient(to right, #99004d 0%, #ff0080 100%);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.input-box input[type='submit']:hover {
+  letter-spacing: 1px;
+  background: linear-gradient(to left, #99004d 0%, #ff0080 100%);
+}
+.option {
+  font-size: 14px;
+  text-align: center;
+}
+.facebook a,
+.twitter a {
+  display: block;
+  width: 100%;
+  height: 45px;
+  padding-left: 20px;
+  color: #fff;
+  font-size: 15px;
+  line-height: 45px;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.facebook i,
+.twitter i {
+  padding-right: 12px;
+  font-size: 20px;
+}
+.twitter a {
+  margin: 20px 0 15px 0;
+  background: linear-gradient(to right, #dd4b39 0%, #dd4b39 100%);
+}
+.twitter a:hover {
+  margin: 20px 0 15px 0;
+  background: linear-gradient(to left, #dd4b39 0%, #dd4b39 100%);
+}
+.facebook a {
+  margin: 20px 0 50px 0;
+  background: linear-gradient(to right, #3b5998 0%, #476bb8 100%);
+}
+.facebook a:hover {
+  margin: 20px 0 50px 0;
+  background: linear-gradient(to left, #3b5998 0%, #476bb8 100%);
+}

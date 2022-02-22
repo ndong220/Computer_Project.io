@@ -1,0 +1,134 @@
+<!-- menu -->
+<section id="menu">
+  <div class="container">
+    <div class="menu-area">
+      <!-- Navbar -->
+      <div class="navbar navbar-default" id="navbar-cus" role="navigation">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+        <div class="navbar-collapse collapse">
+          <!-- Left nav -->
+          <ul class="nav navbar-nav">
+            <li>
+              <a class="text-menu" [routerLink]="['/home']"><i nz-icon nzType="home" nzTheme="outline"></i> Trang chủ</a>
+            </li>
+            <li>
+              <a nz-dropdown [nzPlacement]="'bottomLeft'" [nzDropdownMenu]="menu" (nzVisibleChange)="change($event)">
+                <i nz-icon nzType="unordered-list" nzTheme="outline"></i>
+                Danh mục
+                <i nz-icon nzType="down"></i>
+              </a>
+              <nz-dropdown-menu #menu="nzDropdownMenu">
+                <ul nz-menu>
+                  <ng-container *ngFor="let item of nodes">
+                    <li (click)="viewProd(item)" *ngIf="item.children.length === 0" nz-menu-item>
+                      {{ item.title }}
+                    </li>
+                    <li (click)="viewProd(item)" *ngIf="item.children.length !== 0" nz-submenu nzTitle="{{ item.title }}">
+                      <ng-container *ngTemplateOutlet="tree; context: { node: item }"> </ng-container>
+                    </li>
+                  </ng-container>
+                  <ng-template #tree let-node="node">
+                    <ul>
+                      <ng-container *ngIf="node.children && node.children.length > 0">
+                        <ng-container *ngFor="let child of node.children">
+                          <li (click)="viewProd(child)" nz-menu-item *ngIf="child.children.length === 0">
+                            {{ child.title }}
+                          </li>
+                          <li (click)="viewProd(child)" nz-submenu *ngIf="child.children.length > 0" nzTitle="{{ child.title }}">
+                            <ng-container *ngTemplateOutlet="tree; context: { node: child }"> </ng-container>
+                          </li>
+                        </ng-container>
+                      </ng-container>
+                    </ul>
+                    <ul>
+                      <li (click)="viewProd(node)" nz-menu-item *ngIf="!node.children && node.children.length === 0">
+                        {{ node.title }}
+                      </li>
+                    </ul>
+                  </ng-template>
+                </ul>
+              </nz-dropdown-menu>
+            </li>
+            <li>
+              <a nz-dropdown [nzDropdownMenu]="menu1">
+                <i nz-icon nzType="search" nzTheme="outline"></i>
+                Tìm theo hãng
+                <i nz-icon nzType="down"></i>
+              </a>
+              <nz-dropdown-menu #menu1="nzDropdownMenu">
+                <ul nz-menu>
+                  <li style="width: 700px" nz-menu-item>
+                    <nz-card nzTitle="Thương hiệu nổi bật" [nzExtra]="extraTemplate">
+                      <div nz-row>
+                        <div class="hoverlist-brand">
+                          <a href="javascript:void(0)" [routerLink]="['/brand/1/asus']">
+                            <img src="https://hanoicomputercdn.com/media/brand/asus.jpg" alt=""
+                          /></a>
+                          <a href="javascript:void(0)" [routerLink]="['/brand/1/dell']">
+                            <img src="https://hanoicomputercdn.com/media/brand/dell.jpg" alt=""
+                          /></a>
+                          <a href="javascript:void(0)" [routerLink]="['/brand/1/msi']">
+                            <img src="https://hanoicomputercdn.com/media/brand/msi.jpg" alt=""
+                          /></a>
+                          <a href="javascript:void(0)" [routerLink]="['/brand/1/hp']">
+                            <img src="https://hanoicomputercdn.com/media/brand/hp.jpg" alt=""
+                          /></a>
+                          <a href="javascript:void(0)" [routerLink]="['/brand/1/acer']">
+                            <img src="https://hanoicomputercdn.com/media/brand/acer.jpg" alt=""
+                          /></a>
+                          <a href="javascript:void(0)" [routerLink]="['/brand/1/intel']">
+                            <img src="https://hanoicomputercdn.com/media/brand/intel.jpg" alt=""
+                          /></a>
+                          <a href="javascript:void(0)" [routerLink]="['/brand/1/amd']">
+                            <img src="https://hanoicomputercdn.com/media/brand/amd.jpg" alt=""
+                          /></a>
+                          <a href="javascript:void(0)" [routerLink]="['/brand/1/lenovo']">
+                            <img src="https://hanoicomputercdn.com/media/brand/lenovo.jpg" alt=""
+                          /></a>
+                          <a href="javascript:void(0)" [routerLink]="['/brand/1/gigabyte']">
+                            <img src="https://hanoicomputercdn.com/media/brand/gigabyte.jpg" alt=""
+                          /></a>
+                          <a href="javascript:void(0)" [routerLink]="['/brand/1/microsoft']">
+                            <img src="https://hanoicomputercdn.com/media/brand/microsoft.jpg" alt=""
+                          /></a>
+                          <a href="javascript:void(0)" [routerLink]="['/brand/1/lg']">
+                            <img src="https://hanoicomputercdn.com/media/brand/lg.jpg" alt=""
+                          /></a>
+                          <a href="javascript:void(0)" [routerLink]="['/brand/1/samsung']">
+                            <img src="https://hanoicomputercdn.com/media/brand/samsung.jpg" alt=""
+                          /></a>
+                        </div>
+                      </div>
+                    </nz-card>
+                    <ng-template #extraTemplate>
+                      <a [routerLink]="['/list-supplier']">Xem tất cả <i nz-icon nzType="arrow-right" nzTheme="outline"></i></a>
+                    </ng-template>
+                  </li>
+                </ul>
+              </nz-dropdown-menu>
+            </li>
+            <!-- <li><a class="text-menu" (click)="search('Laptop gaming')">Laptop Gaming</a></li>
+            <li><a class="text-menu" (click)="search('PC')">PC Worksation</a></li>
+            <li><a class="text-menu" (click)="search('Gaming Gear')">Gaming Gear</a></li>
+            <li><a class="text-menu" (click)="search('Linh kiện')">Linh Kiện</a></li> -->
+            <li>
+              <a class="text-menu" [routerLink]="['/about-us']"><i nz-icon nzType="contacts" nzTheme="outline"></i> Về chúng tôi</a>
+            </li>
+            <li>
+              <a class="text-menu" (click)="gotoContact()"><i nz-icon nzType="phone" nzTheme="outline"></i> Liên hệ</a>
+            </li>
+          </ul>
+        </div>
+        <!--/.nav-collapse -->
+      </div>
+    </div>
+  </div>
+</section>
+<!-- / menu -->

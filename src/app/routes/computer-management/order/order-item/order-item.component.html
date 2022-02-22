@@ -1,0 +1,199 @@
+<nz-modal
+  [nzAutofocus]="null"
+  [(nzVisible)]="isVisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  nzMaskClosable="false"
+  (nzOnCancel)="handleCancel()"
+  [nzWidth]="1300"
+>
+  <ng-template #modalTitle> {{ tittle }} </ng-template>
+
+  <ng-template #modalContent>
+    <form nz-form [formGroup]="form" (ngSubmit)="save()">
+      <div nz-row>
+        <div nz-col nzSpan="12">
+          <nz-form-item>
+            <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired nzFor="code">Mã</nz-form-label>
+            <nz-form-control [nzSm]="17" [nzXs]="24" nzErrorTip="Mã chi tiết đơn đặt không được để trống!">
+              <input readonly nz-input formControlName="code" id="code" placeholder="Nhập vào mã" />
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired nzFor="name">Tên</nz-form-label>
+            <nz-form-control [nzSm]="17" [nzXs]="24" nzErrorTip="Tên chi tiết đơn đặt không được để trống!">
+              <input readonly nz-input formControlName="name" id="name" placeholder="Nhập vào tên" />
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired nzFor="city">Thành phố</nz-form-label>
+            <nz-form-control [nzSm]="17" [nzXs]="24" nzErrorTip="Tên chi tiết đơn đặt không được để trống!">
+              <input readonly nz-input formControlName="city" id="city" placeholder="Nhập vào tên" />
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired nzFor="commune">Xã phường</nz-form-label>
+            <nz-form-control [nzSm]="17" [nzXs]="24" nzErrorTip="Tên chi tiết đơn đặt không được để trống!">
+              <input readonly nz-input formControlName="commune" id="commune" placeholder="Nhập vào tên" />
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired nzFor="createdDate">Ngày đặt </nz-form-label>
+            <nz-form-control [nzSm]="17" [nzXs]="24" nzErrorTip="Tên chi tiết đơn đặt không được để trống!">
+              <nz-date-picker [nzDisabled]="true" formControlName="createdDate" style="width: 100%"> </nz-date-picker>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired nzFor="paymentType">Phương thức thanh toán </nz-form-label>
+            <nz-form-control [nzSm]="17" [nzXs]="24" nzErrorTip="Tên chi tiết đơn đặt không được để trống!">
+              <nz-select [nzDisabled]="true" formControlName="paymentType">
+                <nz-option [nzValue]="1" nzLabel="Thanh toán trực tiếp"></nz-option>
+                <nz-option [nzValue]="2" nzLabel="Thanh toán online"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <div nz-col nzSpan="12">
+          <nz-form-item>
+            <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired nzFor="email">Email</nz-form-label>
+            <nz-form-control [nzSm]="17" [nzXs]="24" nzErrorTip="Mã chi tiết đơn đặt không được để trống!">
+              <input readonly nz-input formControlName="email" id="email" placeholder="Nhập vào mã" />
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired nzFor="phoneNumber">SĐT</nz-form-label>
+            <nz-form-control [nzSm]="17" [nzXs]="24" nzErrorTip="Mã chi tiết đơn đặt không được để trống!">
+              <input readonly nz-input formControlName="phoneNumber" id="phoneNumber" placeholder="Nhập vào mã" />
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired nzFor="district">Quận huyện</nz-form-label>
+            <nz-form-control [nzSm]="17" [nzXs]="24" nzErrorTip="Tên chi tiết đơn đặt không được để trống!">
+              <input readonly nz-input formControlName="district" id="district" placeholder="Nhập vào tên" />
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired nzFor="addressDetail">Địa chỉ chi tiết </nz-form-label>
+            <nz-form-control [nzSm]="17" [nzXs]="24" nzErrorTip="Tên chi tiết đơn đặt không được để trống!">
+              <input readonly nz-input formControlName="addressDetail" id="addressDetail" placeholder="Nhập vào tên" />
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired nzFor="grandTotal">Giá tiền đơn hàng </nz-form-label>
+            <nz-form-control [nzSm]="17" [nzXs]="24" nzErrorTip="Tên chi tiết đơn đặt không được để trống!">
+              <input readonly nz-input formControlName="grandTotal" id="grandTotal" placeholder="Nhập vào tên" />
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired nzFor="status">Trạng thái đơn hàng </nz-form-label>
+            <nz-form-control [nzSm]="17" [nzXs]="24" nzErrorTip="Tên chi tiết đơn đặt không được để trống!">
+              <nz-select formControlName="status">
+                <nz-option *ngFor="let item of listStatusOrder" [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <div nz-col nzSpan="24">
+          <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired nzFor="status">Danh sách sản phẩm </nz-form-label>
+          <div class="table-responsive">
+            <table *ngIf="listCart.length > 0" class="table">
+              <thead>
+                <tr>
+                  <th scope="col" class="border-0 bg-light">
+                    <div class="p-2 px-3 text-uppercase">Sản phẩm</div>
+                  </th>
+                  <th scope="col" class="border-0 bg-light">
+                    <div class="py-2 text-uppercase">Giá</div>
+                  </th>
+                  <th scope="col" class="border-0 bg-light">
+                    <div class="py-2 text-uppercase">Số lượng</div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of listCart">
+                  <td scope="row" class="border-0">
+                    <div class="col-md-2 item-center">
+                      <img [src]="baseFile + item.pictures[0]" alt="" width="70" class="img-fluid rounded shadow-sm" />
+                    </div>
+                    <div class="col-md-7 item-center">
+                      <div class="d-inline-block align-middle">
+                        <h5 class="">
+                          <a href="javascript:void(0)" class="text-dark d-inline-block align-middle">{{ item.name }}</a>
+                        </h5>
+                        <span class="text-muted font-weight-normal font-italic d-block"
+                          >Loại sản phẩm: <span *ngFor="let cate of item.categoryName">{{ cate }}</span></span
+                        >
+                      </div>
+                    </div>
+                  </td>
+                  <td style="height: 70px" class="border-0 align-middle item-center">
+                    <strong> {{ item.price - item.discount | currency: 'VND' | lowercase }}</strong>
+                  </td>
+                  <td style="width: 50px; height: 70px" class="border-0 align-middle">
+                    <div class="form-group item-center">
+                      <p>{{ item.count }}</p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-secondary"
+      *ngIf="isInfo && btnEdit.visible && btnEdit.grandAccess"
+      (click)="btnEdit.click($event)"
+    >
+      <i nz-icon nzType="edit" nzTheme="fill"></i>{{ btnEdit.title }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-primary"
+      *ngIf="!isInfo && btnSave.visible && btnSave.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnSave.click($event)"
+    >
+      <i nz-icon nzType="save" nzTheme="fill"></i>{{ btnSave.title }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-primary"
+      *ngIf="!isInfo && !isEdit && btnSaveAndCreate.visible && btnSaveAndCreate.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnSaveAndCreate.click($event)"
+    >
+      <i nz-icon nzType="save" nzTheme="fill"></i>{{ btnSaveAndCreate.title }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-warning"
+      *ngIf="btnCancel.visible && btnCancel.grandAccess"
+      (click)="btnCancel.click($event)"
+    >
+      <i nz-icon nzType="close-circle" nzTheme="fill"></i>{{ btnCancel.title }}
+    </button>
+  </ng-template>
+</nz-modal>

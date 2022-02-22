@@ -1,0 +1,3 @@
+<nz-tag nzColor="warning" *ngIf="params.value === null">Đang chờ xóa</nz-tag>
+<nz-tag [nzColor]="'#00BB00'" *ngIf="params.value === true">Xóa thành công</nz-tag>
+<nz-tag [nzColor]="'#EF5350'" *ngIf="params.value === false">Xóa không thành công</nz-tag>

@@ -1,0 +1,339 @@
+<nz-modal
+  [nzAutofocus]="null"
+  [(nzVisible)]="isVisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  nzMaskClosable="false"
+  (nzOnCancel)="handleCancel()"
+  [nzWidth]="1250"
+>
+  <ng-template #modalTitle> {{ tittle }} </ng-template>
+
+  <ng-template #modalContent>
+    <form nz-form [formGroup]="form" (ngSubmit)="save()">
+      <div nz-row>
+        <div nz-col [nzSm]="24" [nzMd]="12" [nzLg]="12">
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="code">Mã</nz-form-label>
+            <nz-form-control [nzSm]="17" [nzXs]="24" nzErrorTip="Mã sản phẩm không được để trống!">
+              <input nz-input formControlName="code" id="code" placeholder="Nhập vào mã" />
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Tên</nz-form-label>
+            <nz-form-control [nzSm]="17" [nzXs]="24" nzErrorTip="Tên sản phẩm không được để trống!">
+              <input nz-input formControlName="name" id="name" placeholder="Nhập vào tên" />
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="price">Giá SP</nz-form-label>
+            <nz-form-control [nzSm]="17" [nzXs]="24" nzErrorTip="Giá sản phẩm không được để trống!">
+              <input type="number" nz-input formControlName="price" id="price" placeholder="Nhập vào giá sản phẩm" />
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="discount">Giảm giá SP</nz-form-label>
+            <nz-form-control [nzSm]="17" [nzXs]="24">
+              <input
+                min="1"
+                max="100"
+                type="number"
+                nz-input
+                formControlName="discount"
+                id="discount"
+                placeholder="Nhập vào giảm giá sản phẩm"
+              />
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nz nzRequired nzFor="supplier">Nhà cung cấp </nz-form-label>
+            <nz-form-control [nzSm]="17" [nzXs]="24" nzErrorTip="Giá sản phẩm không được để trống!">
+              <nz-select nzShowSearch nzAllowClear formControlName="supplier" nzPlaceHolder="Chọn nhà cung cấp" [(ngModel)]="supplierId">
+                <nz-option *ngFor="let item of listSupplier" [nzLabel]="item['name']" [nzValue]="item['id']"> </nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nz nzFor="listTag">Danh sách Tag </nz-form-label>
+            <nz-form-control [nzSm]="17" [nzXs]="24">
+              <nz-select
+                nzShowSearch
+                nzAllowClear
+                nzMode="multiple"
+                formControlName="listTag"
+                nzPlaceHolder="Chọn Tag"
+                [(ngModel)]="listTagSelected"
+              >
+                <nz-option
+                  *ngFor="let item of listTag"
+                  [nzLabel]="item['code']"
+                  [nzValue]="item['id']"
+                  [nzHide]="!isNotSelectedTag(item['id'])"
+                >
+                </nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item nz-row>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="status">Trạng thái</nz-form-label>
+            <nz-form-control [nzSpan]="17">
+              <nz-switch formControlName="status" nzSize="small" style="margin-right: 5px"></nz-switch>
+              <label>
+                <nz-tag [nzColor]="'#00BB00'" *ngIf="form.controls.status.value">Hoạt động</nz-tag>
+                <nz-tag [nzColor]="'#EF5350'" *ngIf="!form.controls.status.value">Không hoạt động </nz-tag>
+              </label>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <div nz-col [nzSm]="24" [nzMd]="12" [nzLg]="12">
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="title">Tiêu đề</nz-form-label>
+            <nz-form-control [nzSm]="17" [nzXs]="24" nzErrorTip="Tiêu đề sản phẩm không được để trống!">
+              <input nz-input formControlName="title" id="title" placeholder="Nhập vào tiêu đề" />
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="metaTitle">Tiêu đề bổ sung </nz-form-label>
+            <nz-form-control [nzSm]="17" [nzXs]="24" nzErrorTip="Tiêu đề bổ sung sản phẩm không được để trống!">
+              <input nz-input formControlName="metaTitle" id="metaTitle" placeholder="Nhập vào tiêu đề bổ sung" />
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item nz-row>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="summary">Tổng quát</nz-form-label>
+            <nz-form-control [nzSpan]="17" nzErrorTip="Tổng quát sản phẩm không được để trống!">
+              <input nz-input formControlName="summary" id="summary" placeholder="Nhập vào tổng quát" />
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="quantity">Số lượng</nz-form-label>
+            <nz-form-control [nzSm]="17" [nzXs]="24" nzErrorTip="Số lượng không được để trống!">
+              <input min="1" type="number" nz-input formControlName="quantity" id="quantity" placeholder="Nhập vào số lượng sản phẩm" />
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="thoiGianBaoHanh">Thời gian bảo hành </nz-form-label>
+            <nz-form-control [nzSm]="7" [nzXs]="24" nzErrorTip="Thời gian bảo hành được để trống!">
+              <input
+                min="1"
+                type="number"
+                nz-input
+                formControlName="thoiGianBaoHanh"
+                id="thoiGianBaoHanh"
+                placeholder="Nhập vào thời gian bảo hành"
+              />
+            </nz-form-control>
+            <nz-form-label [nzSm]="5" [nzXs]="24" nzRequired nzFor="loaiBaoHanh">Loại bảo hành </nz-form-label>
+            <nz-form-control [nzSm]="5" [nzXs]="24">
+              <nz-select formControlName="loaiBaoHanh" id="loaiBaoHanh" nzShowSearch nzAllowClear nzPlaceHolder="Chọn loại BH">
+                <nz-option nzLabel="Tháng" nzValue="Tháng"></nz-option>
+                <nz-option nzLabel="Năm" nzValue="Năm"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nz nzFor="listCategory">Danh sách loại SP </nz-form-label>
+            <nz-form-control [nzSm]="17" [nzXs]="24">
+              <nz-select
+                nzShowSearch
+                nzAllowClear
+                nzMode="multiple"
+                formControlName="listCategory"
+                nzPlaceHolder="Chọn loại SP"
+                [(ngModel)]="listCategorySelected"
+              >
+                <nz-option
+                  *ngFor="let item of listCategory"
+                  [nzLabel]="item['name']"
+                  [nzValue]="item['id']"
+                  [nzHide]="!isNotSelectedCategory(item['id'])"
+                >
+                </nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <div nz-col nzSpan="24">
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="title">Thông tin bổ sung</nz-form-label>
+          </nz-form-item>
+          <div nz-col nzSpan="24" nzJustify="right">
+            <button
+              type="button"
+              (click)="addMeta($event)"
+              style="float: right; margin-bottom: 10px"
+              nz-button
+              nzType="primary"
+              [nzSize]="'large'"
+              nzShape="circle"
+            >
+              <i nz-icon nzType="plus"></i>
+            </button>
+          </div>
+          <table #basicTable>
+            <thead>
+              <tr>
+                <th *ngFor="let item of listHeader">{{ item.name }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let data of grid.rowData | slice: (pageIndex - 1) * pageSize:(pageIndex - 1) * pageSize + pageSize; let i = index"
+              >
+                <td>{{ i + 1 }}</td>
+                <td>
+                  <nz-select
+                    [nzDisabled]="isInfo"
+                    [ngModelOptions]="{ standalone: true }"
+                    nzShowSearch
+                    nzAllowClear
+                    nzPlaceHolder="Chọn thông tin"
+                    [(ngModel)]="data.categoryMetaId"
+                  >
+                    <nz-option *ngFor="let item of listCategoryMeta" [nzLabel]="item['key']" [nzValue]="item['id']"> </nz-option>
+                  </nz-select>
+                  <div *ngIf="data.validCategoryMeta" class="error">Thông tin không được để trống</div>
+                </td>
+                <td>
+                  <input
+                    [disabled]="isInfo"
+                    [ngModelOptions]="{ standalone: true }"
+                    type="text"
+                    [(ngModel)]="data.content"
+                    nz-input
+                    id="content"
+                    placeholder="Nhập vào nội dung"
+                  />
+                  <div *ngIf="data.validContent" class="error">Nội dung không được để trống</div>
+                </td>
+                <td>
+                  <nz-switch
+                    [nzDisabled]="isInfo"
+                    [ngModelOptions]="{ standalone: true }"
+                    [(ngModel)]="data.status"
+                    nzSize="small"
+                    style="margin-right: 5px"
+                  ></nz-switch>
+                  <label>
+                    <nz-tag [nzColor]="'#00BB00'" *ngIf="data.status">Hoạt động</nz-tag>
+                    <nz-tag [nzColor]="'#EF5350'" *ngIf="!data.status">Không hoạt động </nz-tag>
+                  </label>
+                </td>
+                <td>
+                  <button
+                    [disabled]="isInfo"
+                    nz-button
+                    type="button"
+                    nzType="primary"
+                    nzShape="circle"
+                    class="btn-danger"
+                    (click)="btnDeleteClickedHandler(data)"
+                    title="Xóa"
+                  >
+                    <i nz-icon nzType="delete" nzTheme="outline"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <nz-pagination
+            style="float: right; margin-top: 15px"
+            [(nzPageIndex)]="pageIndex"
+            [(nzPageSize)]="pageSize"
+            [nzTotal]="grid.rowData.length"
+          >
+          </nz-pagination>
+        </div>
+
+        <div nz-col nzSpan="24">
+          <nz-form-label [nzSm]="24" [nzXs]="24" nzRequired nzFor="quantity">Ảnh sản phẩm</nz-form-label>
+          <nz-upload
+            [nzDisabled]="isInfo"
+            [nzAction]="uploadUrl"
+            nzMultiple="true"
+            nzListType="picture-card"
+            [(nzFileList)]="fileList"
+            [nzShowButton]="fileList.length < 15"
+            [nzPreview]="handlePreview"
+          >
+            <div>
+              <i nz-icon nzType="plus"></i>
+              <div style="margin-top: 8px">Upload</div>
+            </div>
+          </nz-upload>
+          <nz-modal
+            [nzAutofocus]="null"
+            [nzVisible]="previewVisible"
+            [nzContent]="modalContent"
+            [nzFooter]="null"
+            (nzOnCancel)="previewVisible = false"
+          >
+            <ng-template #modalContent>
+              <img [src]="previewImage" [ngStyle]="{ width: '100%' }" />
+            </ng-template>
+          </nz-modal>
+        </div>
+        <div nz-col nzSpan="24">
+          <nz-form-item>
+            <nz-form-label [nzSm]="24" [nzXs]="24" nzFor="quantity">Chi tiết sản phẩm</nz-form-label>
+            <nz-form-control [nzSm]="24" [nzXs]="24">
+              <!-- <textarea rows="4" nz-input formControlName="description"></textarea> -->
+              <ckeditor formControlName="description" style="width: 500px !important" [editor]="Editor"></ckeditor>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-secondary"
+      *ngIf="isInfo && btnEdit.visible && btnEdit.grandAccess"
+      (click)="btnEdit.click($event)"
+    >
+      <i nz-icon nzType="edit" nzTheme="fill"></i>{{ btnEdit.title }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-primary"
+      *ngIf="!isInfo && btnSave.visible && btnSave.grandAccess"
+      (click)="btnSave.click($event)"
+    >
+      <i nz-icon nzType="save" nzTheme="fill"></i>{{ btnSave.title }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-primary"
+      *ngIf="!isInfo && !isEdit && btnSaveAndCreate.visible && btnSaveAndCreate.grandAccess"
+      [nzLoading]="isLoading"
+      (click)="btnSaveAndCreate.click($event)"
+    >
+      <i nz-icon nzType="save" nzTheme="fill"></i>{{ btnSaveAndCreate.title }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      class="btn-warning"
+      *ngIf="btnCancel.visible && btnCancel.grandAccess"
+      (click)="btnCancel.click($event)"
+    >
+      <i nz-icon nzType="close-circle" nzTheme="fill"></i>{{ btnCancel.title }}
+    </button>
+  </ng-template>
+</nz-modal>

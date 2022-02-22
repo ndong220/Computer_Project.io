@@ -1,0 +1,105 @@
+<button
+  nz-button
+  nzType="primary"
+  *ngIf="params.data.infoGrantAccess"
+  nzShape="circle"
+  class="btn-info"
+  (click)="btnInfoClickedHandler($event)"
+  title="Chi tiết"
+>
+  <i nz-icon nzType="info" nzTheme="outline"></i>
+</button>
+
+<button
+  nz-button
+  nzType="success"
+  nzShape="circle"
+  *ngIf="params.data.enterFormulaGrantAccess"
+  class="btn-success"
+  (click)="btnEnterFormulaClickedHandler($event)"
+  title="Nhập công thức"
+>
+  <i nz-icon nzType="setting" nzTheme="outline"></i>
+</button>
+
+<button
+  nz-button
+  nzType="primary"
+  nzShape="circle"
+  *ngIf="params.data.editGrantAccess"
+  class="btn-secondary"
+  (click)="btnEditClickedHandler($event)"
+  title="Cập nhật"
+>
+  <i nz-icon nzType="edit" nzTheme="outline"></i>
+</button>
+<button
+  nz-button
+  nzType="primary"
+  nzShape="circle"
+  *ngIf="params.data.deleteGrantAccess"
+  class="btn-danger"
+  (click)="btnDeleteClickedHandler($event)"
+  title="Xóa"
+>
+  <i nz-icon nzType="delete" nzTheme="outline"></i>
+</button>
+<button
+  nz-button
+  nzType="primary"
+  nzShape="circle"
+  *ngIf="params.data.lockGrantAccess"
+  class="btn-danger"
+  (click)="btnLockClickedHandler($event)"
+  title="Khóa tài khoản"
+>
+  <i nz-icon nzType="lock" nzTheme="outline"></i>
+</button>
+
+<button
+  nz-button
+  nzType="primary"
+  nzShape="circle"
+  *ngIf="params.data.unlockGrantAccess"
+  class="btn-success"
+  (click)="btnUnLockClickedHandler($event)"
+  title="Mở khóa tài khoản"
+>
+  <i nz-icon nzType="unlock" nzTheme="outline"></i>
+</button>
+
+<button
+  nz-button
+  nzType="primary"
+  nzShape="circle"
+  *ngIf="params.data.printGrantAccess"
+  class="btn-info"
+  (click)="btnPrintClickedHandler($event)"
+  title="In hóa đơn"
+>
+  <i nz-icon nzType="printer" nzTheme="outline"></i>
+</button>
+
+<button
+  nz-button
+  nzType="primary"
+  nzShape="circle"
+  *ngIf="params.data.qtvGrantAccess"
+  class="btn-success"
+  (click)="btnQtvClickedHandler($event)"
+  title="Set quyền QTV"
+>
+  <i nz-icon nzType="redo" nzTheme="outline"></i>
+</button>
+
+<button
+  nz-button
+  nzType="primary"
+  nzShape="circle"
+  *ngIf="params.data.unQtvGrantAccess"
+  class="btn-danger"
+  (click)="btnUnQtvClickedHandler($event)"
+  title="Bỏ quyền QTV"
+>
+  <i nz-icon nzType="redo" nzTheme="outline"></i>
+</button>

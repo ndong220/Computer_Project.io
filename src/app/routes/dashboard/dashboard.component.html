@@ -1,0 +1,248 @@
+<nz-card>
+  <div class="row">
+    <div class="col-md-4 col-xl-3">
+      <div class="card bg-c-blue order-card">
+        <div class="card-block">
+          <h6 class="m-b-20">Tổng số đơn hàng</h6>
+          <h2 class="text-right">
+            <i class="fa fa-cart-plus f-left"></i><span>{{ orderCount }}</span>
+          </h2>
+          <p class="m-b-0">
+            Đơn hàng đã giao<span class="f-right">{{ orderCountRecived }}</span>
+          </p>
+          <p class="m-b-0">
+            Đơn hàng đã hủy<span class="f-right">{{ orderRevoked }}</span>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 col-xl-3">
+      <div class="card bg-c-pink order-card">
+        <div class="card-block">
+          <h6 class="m-b-20">Đơn hàng đã nhận tháng này</h6>
+          <h2 class="text-right">
+            <i class="fa fa-credit-card f-left"></i><span>{{ orderCountMonth }}</span>
+          </h2>
+          <p class="m-b-0">
+            Đơn hàng đã nhận ngày hôm nay<span class="f-right">{{ orderCountToday }}</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-xl-3">
+      <div class="card bg-c-yellow order-card">
+        <div class="card-block">
+          <h6 class="m-b-20">Đơn hàng chưa xử lý</h6>
+          <h2 class="text-right">
+            <i class="fas fa-spinner f-left"></i> <span>{{ visitProd }}</span>
+          </h2>
+          <p class="m-b-0">
+            Đơn hàng chưa xử lý ngày hôm nay<span class="f-right">{{ visitProdToday }}</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-xl-3">
+      <div class="card bg-c-green order-card">
+        <div class="card-block">
+          <h6 class="m-b-20">Lượt ghé thăm trang web</h6>
+          <h2 class="text-right">
+            <i class="fa fa-rocket f-left"></i><span>{{ visitWebsite }}</span>
+          </h2>
+          <p class="m-b-0">
+            Lượt ghé thăm ngày hôm nay<span class="f-right">{{ visitWebsiteToday }}</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-6 col-sm-6">
+      <div class="card-box bg-green">
+        <div class="inner">
+          <h3>{{ grandTotalRecived | currency: 'VND' }}</h3>
+          <p>Tổng tiền đơn hàng đã giao</p>
+        </div>
+        <div class="icon">
+          <i class="fas fa-dollar-sign"></i>
+        </div>
+        <a href="javascipt:void(0)" [routerLink]="'/admin/computer-management/order'" class="card-box-footer"
+          >Xem thêm <i class="fa fa-arrow-circle-right"></i
+        ></a>
+      </div>
+    </div>
+    <div class="col-lg-6 col-sm-6">
+      <div class="card-box bg-orange">
+        <div class="inner">
+          <h3>{{ grandTotal | currency: 'VND' }}</h3>
+          <p>Tổng tiền đơn hàng</p>
+        </div>
+        <div class="icon">
+          <i class="fas fa-dollar-sign"></i>
+        </div>
+        <a href="javascipt:void(0)" [routerLink]="'/admin/computer-management/order'" class="card-box-footer"
+          >Xem thêm <i class="fa fa-arrow-circle-right"></i
+        ></a>
+      </div>
+    </div>
+    <!-- <div class="col-lg-4 col-sm-6">
+      <div class="card-box bg-red">
+        <div class="inner">
+          <h3>723</h3>
+          <p>Faculty Strength</p>
+        </div>
+        <div class="icon">
+          <i class="fa fa-users"></i>
+        </div>
+        <<a href="javascipt:void(0)" [routerLink]="'/admin/computer-management/order'" class="card-box-footer">
+          Xem thêm <i class="fa fa-arrow-circle-right"></i
+        ></a>
+      </div>
+    </div> -->
+    <div class="col-12">
+      <div class="row">
+        <div class="col-md-12 col-lg-12">
+          <nz-card [nzTitle]="title">
+            <div style="display: block">
+              <canvas
+                baseChart
+                [datasets]="barChartDataMonth"
+                [labels]="barChartLabelsMonth"
+                [options]="barChartOptions"
+                [plugins]="barChartPlugins"
+                [legend]="barChartLegend"
+                [chartType]="barChartType"
+              >
+              </canvas>
+            </div>
+            <ng-template #title>
+              Doanh thu theo tháng năm
+              <nz-select (ngModelChange)="changeYear($event)" style="width: 100px" [(ngModel)]="yearSelect">
+                <nz-option nzValue="{{ currentYear }}" nzLabel="{{ currentYear }}"></nz-option>
+                <nz-option nzValue="{{ currentYear - 1 }}" nzLabel="{{ currentYear - 1 }}"></nz-option>
+                <nz-option nzValue="{{ currentYear - 2 }}" nzLabel="{{ currentYear - 2 }}"></nz-option>
+                <nz-option nzValue="{{ currentYear - 3 }}" nzLabel="{{ currentYear - 3 }}"></nz-option>
+                <nz-option nzValue="{{ currentYear - 4 }}" nzLabel="{{ currentYear - 4 }}"></nz-option>
+              </nz-select>
+            </ng-template>
+          </nz-card>
+        </div>
+
+        <div class="col-lg-6 col-md-12">
+          <nz-card [nzTitle]="titleQuater">
+            <div style="display: block">
+              <canvas
+                baseChart
+                [datasets]="barChartDataQuater"
+                [labels]="barChartLabelsQuater"
+                [options]="barChartOptions"
+                [plugins]="barChartPlugins"
+                [legend]="barChartLegend"
+                [chartType]="barChartType"
+              >
+              </canvas>
+            </div>
+            <ng-template #titleQuater>
+              Doanh thu theo qúy năm
+              <nz-select (ngModelChange)="changeYearQuater($event)" style="width: 100px" [(ngModel)]="yearSelectQuater">
+                <nz-option nzValue="{{ currentYear }}" nzLabel="{{ currentYear }}"></nz-option>
+                <nz-option nzValue="{{ currentYear - 1 }}" nzLabel="{{ currentYear - 1 }}"></nz-option>
+                <nz-option nzValue="{{ currentYear - 2 }}" nzLabel="{{ currentYear - 2 }}"></nz-option>
+                <nz-option nzValue="{{ currentYear - 3 }}" nzLabel="{{ currentYear - 3 }}"></nz-option>
+                <nz-option nzValue="{{ currentYear - 4 }}" nzLabel="{{ currentYear - 4 }}"></nz-option>
+              </nz-select>
+            </ng-template>
+          </nz-card>
+        </div>
+
+        <div class="col-lg-6 col-md-12">
+          <nz-card nzTitle="Doanh thu theo từng năm">
+            <div style="display: block">
+              <canvas
+                baseChart
+                [datasets]="barChartDataYear"
+                [labels]="barChartLabelsYear"
+                [options]="barChartOptions"
+                [plugins]="barChartPlugins"
+                [legend]="barChartLegend"
+                [chartType]="barChartType"
+              >
+              </canvas>
+            </div>
+          </nz-card>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6 col-sm-12">
+      <div class="card-box bg-blue">
+        <div class="inner">
+          <h3>Top 5 sản phẩm xem nhiều nhất</h3>
+        </div>
+        <div class="icon">
+          <i class="fab fa-product-hunt"></i>
+        </div>
+        <div>
+          <table class="table-responsive">
+            <tr>
+              <th style="width: 100px">Top</th>
+              <th style="width: 150px">Ảnh</th>
+              <th>Tên SP</th>
+              <th>Lượt xem</th>
+            </tr>
+            <tr *ngFor="let item of prodTopFive; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>
+                <img width="100" height="100" [src]="baseFile + item.pictures[0]" alt="product-image" />
+              </td>
+              <td>
+                <p>{{ item.name }}</p>
+              </td>
+              <td style="width: 100px; height: 100px">{{ item.visitCount }}</td>
+            </tr>
+          </table>
+        </div>
+        <a href="javascipt:void(0)" [routerLink]="'/admin/computer-management/product'" class="card-box-footer"
+          >Xem thêm <i class="fa fa-arrow-circle-right"></i
+        ></a>
+      </div>
+    </div>
+
+    <div class="col-lg-6 col-sm-12">
+      <div class="card-box bg-green">
+        <div class="inner">
+          <h3>Top 5 sản phẩm mua nhiều nhất</h3>
+        </div>
+        <div class="icon">
+          <i class="fab fa-product-hunt"></i>
+        </div>
+        <div>
+          <table class="table-responsive">
+            <tr>
+              <th style="width: 100px">Top</th>
+              <th style="width: 150px">Ảnh</th>
+              <th>Tên SP</th>
+              <th>Lượt mua</th>
+            </tr>
+            <tr *ngFor="let item of prodOrderFive; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>
+                <img width="100" height="100" [src]="baseFile + item.pictures[0]" alt="product-image" />
+              </td>
+              <td>
+                <p>{{ item.name }}</p>
+              </td>
+              <td style="width: 100px; height: 100px">{{ item.orderTop }}</td>
+            </tr>
+          </table>
+        </div>
+        <a href="javascipt:void(0)" [routerLink]="'/admin/computer-management/product'" class="card-box-footer"
+          >Xem thêm <i class="fa fa-arrow-circle-right"></i
+        ></a>
+      </div>
+    </div>
+  </div>
+  <div></div>
+</nz-card>

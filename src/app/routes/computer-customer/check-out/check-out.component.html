@@ -1,0 +1,436 @@
+<div class="row">
+  <div class="col-md-10 offset-md-1">
+    <h2 style="padding-top: 20px; text-align: center">Thanh toán</h2>
+    <ul class="breadcrumb">
+      <li><a href="javascript:void(0)" [routerLink]="'/home'">Trang chủ</a></li>
+      <li>Thanh toán</li>
+    </ul>
+    <div class="">
+      <div class="row">
+        <div class="col-lg-12 p-5 bg-white rounded shadow-sm mb-5">
+          <!-- <nz-breadcrumb>
+                          <nz-breadcrumb-item>
+                              <a href="" [routerLink]="'/home'"><i nz-icon nzType="home"></i></a>
+                          </nz-breadcrumb-item>
+                          <nz-breadcrumb-item>
+                              <i class="fab fa-car-alt    "></i><span>Giỏ hàng</span>
+                          </nz-breadcrumb-item>
+                      </nz-breadcrumb> -->
+          <!-- Shopping cart table -->
+          <button style="float: right" type="button" (click)="getListCart()" class="btn btn-danger">Cập nhật giỏ hàng</button>
+          <div *ngIf="listCart.length === 0" class="col-sm-12 empty-cart-cls text-center">
+            <img src="https://i.imgur.com/dCdflKN.png" width="130" height="130" class="img-fluid mb-4 mr-3" />
+            <h3><strong>Giỏ hàng của bạn đang trống</strong></h3>
+            <h4>Hãy tiếp tục mua sắn bạn nhé :)</h4>
+            <h4><button type="button" [routerLink]="'/home'" class="btn btn-success">Tiếp tục mua sắm</button></h4>
+          </div>
+          <div class="table-responsive">
+            <table *ngIf="listCart.length > 0" class="table">
+              <thead>
+                <tr>
+                  <th scope="col" class="border-0 bg-light">
+                    <div class="p-2 px-3 text-uppercase">Sản phẩm</div>
+                  </th>
+                  <th scope="col" class="border-0 bg-light">
+                    <div class="py-2 text-uppercase">Giá</div>
+                  </th>
+                  <th scope="col" class="border-0 bg-light">
+                    <div class="py-2 text-uppercase">Số lượng</div>
+                  </th>
+                  <th scope="col" class="border-0 bg-light">
+                    <div class="py-2 text-uppercase">Thao tác</div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of listCart">
+                  <td scope="row" class="border-0">
+                    <div class="col-md-2 item-center">
+                      <img [src]="baseFile + item.pictures[0]" alt="" width="70" class="img-fluid rounded shadow-sm" />
+                    </div>
+                    <div class="col-md-7 item-center">
+                      <div class="d-inline-block align-middle">
+                        <h5 class="">
+                          <a href="javascript:void(0)" (click)="viewDetail(item.code)" class="text-dark d-inline-block align-middle">{{
+                            item.name
+                          }}</a>
+                        </h5>
+                        <span class="text-muted font-weight-normal font-italic d-block"
+                          >Loại sản phẩm: <span>{{ item.categoryName.toString() }}</span></span
+                        >
+                      </div>
+                    </div>
+                  </td>
+                  <td style="height: 70px" class="border-0 align-middle item-center">
+                    <strong> {{ item.price - item.discount | currency: 'VND' | lowercase }}</strong>
+                  </td>
+                  <td style="width: 50px; height: 70px" class="border-0 align-middle">
+                    <div class="form-group item-center">
+                      <p>{{ item.count }}</p>
+                    </div>
+                  </td>
+                  <td class="border-0 align-middle">
+                    <a href="javascript:void(0)" (click)="removeItem(item)" class="text-dark item-center"><i class="fas fa-trash"></i></a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- End -->
+        </div>
+      </div>
+      <div *ngIf="listCart.length > 0">
+        <div class="row py-5 p-4 bg-white rounded shadow-sm">
+          <div class="col-lg-12">
+            <div class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold">Thông tin mua hàng</div>
+            <div class="p-4">
+              <form nz-form [formGroup]="form" (ngSubmit)="save()">
+                <div nz-row>
+                  <div nz-col [nzSm]="24" [nzMd]="12" [nzLg]="12">
+                    <nz-form-item>
+                      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="code">Họ Tên</nz-form-label>
+                      <nz-form-control [nzSm]="17" [nzXs]="24" nzErrorTip="Họ tên không được để trống!">
+                        <input nz-input formControlName="name" id="name" placeholder="Nhập vào họ tên" />
+                      </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item>
+                      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Email</nz-form-label>
+                      <nz-form-control [nzSm]="17" [nzXs]="24" nzErrorTip="Email không được để trống!">
+                        <input nz-input formControlName="email" id="email" placeholder="Nhập vào email" />
+                      </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item>
+                      <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="phoneNumber" nzRequired>Số điện thoại </nz-form-label>
+                      <nz-form-control
+                        [nzSm]="17"
+                        [nzXs]="24"
+                        [nzValidateStatus]="form.controls['phoneNumber']"
+                        nzErrorTip="Vui lòng nhập số điện thoại!"
+                      >
+                        <nz-input-group [nzAddOnBefore]="addOnBeforeTemplate">
+                          <ng-template #addOnBeforeTemplate>
+                            <nz-select formControlName="phoneNumberPrefix" class="phone-select">
+                              <nz-option nzLabel="+84" nzValue="+84"></nz-option>
+                            </nz-select>
+                          </ng-template>
+                          <input formControlName="phoneNumber" id="'phoneNumber'" nz-input />
+                        </nz-input-group>
+                      </nz-form-control>
+                    </nz-form-item>
+                  </div>
+
+                  <div nz-col [nzSm]="24" [nzMd]="12" [nzLg]="12">
+                    <nz-form-item>
+                      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="city">Tỉnh/ Thành phố</nz-form-label>
+                      <nz-form-control [nzSm]="17" [nzXs]="24" nzErrorTip="Tỉnh/ Thành phố không được để trống!">
+                        <nz-select
+                          nzShowSearch
+                          nzMode="default"
+                          (ngModelChange)="changeCity($event)"
+                          nzPlaceHolder="Chọn tỉnh/ thành phố"
+                          formControlName="city"
+                          [nzOptions]="listCity"
+                        >
+                        </nz-select>
+                      </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item>
+                      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="district">Quận/ Huyện </nz-form-label>
+                      <nz-form-control [nzSm]="17" [nzXs]="24" nzErrorTip="Quận huyện không được để trống!">
+                        <nz-select
+                          nzShowSearch
+                          [nzDisabled]="listDistrict.length === 0"
+                          nzMode="default"
+                          nzPlaceHolder="Chọn quận/ huyện"
+                          (ngModelChange)="changeDistrict($event)"
+                          formControlName="district"
+                          [nzOptions]="listDistrict"
+                        >
+                        </nz-select>
+                      </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item>
+                      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="commune">Xã/ Phường/ Thị trấn </nz-form-label>
+                      <nz-form-control [nzSm]="17" [nzXs]="24" nzErrorTip="Xã/ Phường không được để trống!">
+                        <nz-select
+                          nzShowSearch
+                          [nzDisabled]="listDistrict.length === 0"
+                          nzMode="default"
+                          nzPlaceHolder="Chọn Xã/ Phường"
+                          formControlName="commune"
+                          [nzOptions]="listCommune"
+                        >
+                        </nz-select>
+                      </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item>
+                      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="metaTitle">Địa chỉ chi tiết </nz-form-label>
+                      <nz-form-control [nzSm]="17" [nzXs]="24" nzErrorTip="Địa chỉ chi tiết không được để trống!">
+                        <input nz-input formControlName="addressDetail" id="addressDetail" placeholder="Nhập vào địa chỉ chi tiết" />
+                      </nz-form-control>
+                    </nz-form-item>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="row py-5 p-4 bg-white rounded shadow-sm">
+          <div class="col-lg-6">
+            <div class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold">Mã giảm giá</div>
+            <div class="p-4">
+              <p class="font-italic mb-4">Nếu bạn có mã giảm giá, hãy chọn nó vào ô bên dưới</p>
+              <div class="input-group mb-4 border rounded-pill p-2">
+                <div class="col-md-10">
+                  <input
+                    readonly
+                    type="text"
+                    [(ngModel)]="voucherCode"
+                    id="forcus-text"
+                    placeholder=" Mã giảm giá"
+                    aria-describedby="button-addon3"
+                    class="form-control cuupon-text border-0"
+                  />
+                </div>
+                <div class="col-md-2">
+                  <button id="button-addon3" type="button" (click)="onFocus()" class="btn btn-success px-4 rounded-pill">
+                    <i class="fa fa-gift mr-2"></i>Lấy mã
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold">Hình thức thanh toán</div>
+            <div class="p-4">
+              <div class="input-group mb-4 border rounded-pill p-2">
+                <span>
+                  <nz-radio-group (ngModelChange)="changeModel($event)" [(ngModel)]="paymentType">
+                    <div nz-row>
+                      <label nz-radio [nzValue]="1">Thanh toán khi nhận hàng</label>
+                    </div>
+                    <div nz-row>
+                      <label nz-radio [nzValue]="2">Thanh toán Online</label>
+                      <div *ngIf="paymentType === 2 && form.valid" class="col-12">
+                        <ngx-paypal [config]="payPalConfig"></ngx-paypal>
+                      </div>
+                    </div>
+                  </nz-radio-group>
+                </span>
+              </div>
+            </div>
+            <div class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold">GHI CHÚ CHO ĐƠN HÀNG(TÙY CHỌN)</div>
+            <div class="p-4">
+              <p class="font-italic mb-4">Nếu bạn có yêu cầu cho người bán, bạn có thể để lại trong hộp bên dưới</p>
+              <textarea [(ngModel)]="description" name="" cols="30" rows="2" class="form-control"></textarea>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold">Đơn hàng tổng quát</div>
+            <div class="p-4">
+              <span>
+                <nz-radio-group [(ngModel)]="radioValue">
+                  <div nz-row>
+                    <label (click)="changeShipping($event)" nz-radio [nzValue]="1">Tiêu chuẩn(miễn phí)</label>
+                  </div>
+                  <div nz-row>
+                    <label (click)="changeShipping($event)" nz-radio [nzValue]="2">Siêu Tốc 2h -Nội thành HCM và HN: 25.000₫</label>
+                  </div>
+                </nz-radio-group>
+              </span>
+              <ul class="list-unstyled mb-4">
+                <li class="d-flex justify-content-between py-3 border-bottom">
+                  <strong class="text-muted">Giá tạm tính </strong><strong>{{ total | currency: 'VND' | lowercase }}</strong>
+                </li>
+                <li class="d-flex justify-content-between py-3 border-bottom">
+                  <strong class="text-muted">Phí vận chuyển</strong><strong>{{ '+' + shipping | currency: 'VND' | lowercase }}</strong>
+                </li>
+                <li class="d-flex justify-content-between py-3 border-bottom">
+                  <strong class="text-muted">Mã giảm giá</strong><strong>{{ '-' + voucher | currency: 'VND' | lowercase }}</strong>
+                </li>
+                <li class="d-flex justify-content-between py-3 border-bottom">
+                  <strong class="text-muted">Tổng cộng</strong>
+                  <strong>{{ shipping + total - voucher | currency: 'VND' | lowercase }}</strong>
+                </li>
+              </ul>
+              <a href="javascript:void(0)" (click)="save()" class="btn btn-danger col-6">
+                <img src="../../../../assets/img/order.png" alt="" />
+                Đặt hàng</a
+              >
+
+              <a href="javascript:void(0)" (click)="printOrder()" class="btn btn-primary col-6"
+                ><img src="../../../../assets/img/chart.png" alt="" /> Xem báo giá</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<nz-modal
+  nzWidth="700px"
+  [(nzVisible)]="isVisible"
+  nzTitle="Voucher của bạn"
+  [nzAutofocus]="false"
+  (nzOnCancel)="handleCancel()"
+  [nzFooter]="nzFooter"
+>
+  <ng-container *nzModalContent>
+    <div class="overflow-auto" nz-row>
+      <div *ngFor="let item of listVoucherByUser" class="col-md-12">
+        <article class="card fl-left">
+          <section class="date">
+            <time datetime="23th feb">
+              <span>{{ item.discountView }}</span
+              ><span>{{ item.typeName }}</span>
+            </time>
+          </section>
+          <section class="card-cont">
+            <h3>Mã giảm giá {{ item.discountView + item.typeName }}</h3>
+            <div class="even-date">
+              <i class="fa fa-calendar"></i>
+              <time>
+                Có hiệu lực từ:
+                <span> {{ item.timeValid }}</span>
+                <!-- <span>08:55pm to 12:00 am</span> -->
+              </time>
+            </div>
+            <!-- <nz-progress [nzStatus]="success" [nzStrokeColor]="'red'" [nzPercent]="item.percent">
+        </nz-progress> -->
+            <button [disabled]="item.isSelected === 2" nz-button class="selected" (click)="applyVoucher(item)" nzType="primary">
+              {{ item.isSelected === 2 ? 'Đã hết hạn' : 'Áp dụng' }}
+            </button>
+          </section>
+        </article>
+      </div>
+      <div class="null-item">
+        <div class="row">
+          <div *ngIf="listVoucherByUser.length === 0" style="height: 400px" class="col-md-12 item-center">
+            <img style="width: 6.25rem; height: 6.25rem" src="../../../../assets/img/null.png" alt="Null Order" />
+            <br />
+            <p>
+              Chưa có mã giảm giá
+              <a href="javascript:void(0)" [routerLink]="'/voucher'">Lấy ngay</a>
+            </p>
+            <br />
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #nzFooter>
+    <button nz-button nzType="primary" (click)="handleCancel()" nzDanger>Đóng</button>
+  </ng-template>
+</nz-modal>
+
+<!-- print pdf -->
+<div id="pdf" [hidden]="true">
+  <div class="in-bao-gia-container">
+    <div class="in-bao-gia-header">
+      <div class="in-bao-gia-header-left"><img src="../../../../../assets/img/Logo.png" /></div>
+      <div class="in-bao-gia-header-right">
+        <p class="ten-cong-ty">CÔNG TY CỔ PHẦN MÁY TÍNH VÂN ANH</p>
+        <p>Trụ sở chính: Bình cầu - Quảng lãng - Ân thi - Hưng yên</p>
+        <p>Số nhà 225 ngách 225/7 ngõ 225 Quan Hoa - Cầu giấy - Hà Nội</p>
+        <p>Hotline: 0394835311 * Website: www.vananhcomputer.vn</p>
+      </div>
+    </div>
+    <div class="in-bao-gia-title">HÓA ĐƠN BÁN HÀNG</div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <p>Khách hàng: {{ itemPrint ? itemPrint.name : '' }}</p>
+        <p>Số điện thoại: {{ itemPrint ? itemPrint.phoneNumber : '' }}</p>
+        <p>Địa chỉ: {{ itemPrint ? itemPrint.addressDetail : '' }}</p>
+        <p>Phường/Xã: {{ itemPrint ? itemPrint.commune : '' }}</p>
+        <p>Quận/Huyện: {{ itemPrint ? itemPrint.district : '' }}</p>
+        <p>Tỉnh/Thành phố: {{ itemPrint ? itemPrint.city : '' }}</p>
+      </div>
+      <div class="col-md-6">
+        <div class="date-currency">
+          <p>
+            Ngày báo giá: <span id="price_time">{{ currentDate | date: 'dd/MM/yyyy HH:mm:ss' }}</span>
+          </p>
+          <p>Đơn vị tính: <span class="currency">VNĐ</span></p>
+        </div>
+      </div>
+    </div>
+    <table class="list_table">
+      <tbody>
+        <tr style="white-space: nowrap; background-color: #f5f5f5">
+          <td><strong>STT </strong></td>
+          <td><strong>Mã SP</strong></td>
+          <td><strong>Hình ảnh</strong></td>
+          <td colspan="2"><strong>Tên sản phẩm</strong></td>
+          <td><strong>Bảo hành</strong></td>
+          <td><strong>Số lượng</strong></td>
+          <td><strong>Đơn giá</strong></td>
+          <td><strong>Thành tiền</strong></td>
+        </tr>
+        <!--  -->
+
+        <tr *ngFor="let prod of itemPrint ? (itemPrint.listProducts ? itemPrint.listProducts : []) : []; let i = index" valign="middle">
+          <td>{{ i + 1 }}</td>
+          <td>{{ prod.code }}</td>
+          <td><img [src]="baseFile + prod.pictures[0]" align="absmiddle" width="120" /></td>
+          <td colspan="2">
+            <b>{{ prod.name }}</b
+            ><br />
+          </td>
+          <td align="center">{{ prod.thoiGianBaoHanh + prod.loaiBaoHanh }}</td>
+          <td align="center">{{ prod.count }}</td>
+          <td align="center">{{ prod.price - prod.discount | currency: 'VND' }}</td>
+          <!--<td align="center"><br />
+ <b>Notice</b>:  Undefined index: totalPrice in <b>/var/www/html/hanoicomputer.vn/public_html/cache/template/shopping_cart_new.2a23035172ef151290d8e2b9e615fc28.php</b> on line <b>86</b><br />
+ 0 VNĐ</td>-->
+          <td>
+            {{ (prod.price - prod.discount) * prod.count | currency: 'VND' }}
+          </td>
+        </tr>
+        <tr>
+          <td colspan="6"></td>
+          <td colspan="2"><strong>Phí vận chuyển</strong></td>
+          <td>
+            <strong style="color: red">{{ (itemPrint ? itemPrint.shipping : 0) | currency: 'VND' }}</strong>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="6"></td>
+          <td colspan="2"><strong>Mã giảm giá</strong></td>
+          <td>
+            <strong style="color: red">{{ (itemPrint ? itemPrint.discount : 0) | currency: 'VND' }}</strong>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="6"></td>
+          <td colspan="2"><strong>Tổng tiền đơn hàng</strong></td>
+          <td>
+            <strong style="color: red">{{ (itemPrint ? itemPrint.grandTotal : 0) | currency: 'VND' }}</strong> <br />
+
+            <strong *ngIf="itemPrint && itemPrint.phuongThucThanhToan === 2" style="color: red">(Đã thanh toán)</strong>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <!-- <div class="print-button">
+      <button href="javascript:window.print()" style="cursor: pointer;" class="nut-do">In đơn hàng</button>
+    </div> -->
+    <div class="in-bao-gia-footer">
+      <p>
+        <i class="fas fa-exclamation-circle"></i> Quý khách lưu ý: Giá bán, khuyến mại của sản phẩm và tình trạng còn hàng có thể bị thay
+        đổi bất cứ lúc nào mà không kịp báo trước.
+      </p>
+    </div>
+    <div class="in-bao-gia-footer center">
+      <p>Để biết thêm chi tiết, vui lòng liên hệ:</p>
+      <p>Hotline: 0394835311 (8h00-21h30 hàng ngày)</p>
+      <p>Email: <a href="mailto:vuquangminhql123@gmail.com">vuquangminhql123@gmail.com</a></p>
+      <p>VÂN ANH COMPUTER CHÂN THÀNH CẢM ƠN QUÝ KHÁCH HÀNG!</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+<nz-tag [nzColor]="'#00BB00'" *ngIf="params.value === 'Hoạt động' || params.value === true">Hoạt động</nz-tag>
+<nz-tag [nzColor]="'#EF5350'" *ngIf="params.value === 'Không hoạt động' || params.value === false">Không hoạt động </nz-tag>
+
+<nz-tag [nzColor]="'#048ff2'" *ngIf="params.value === 'Chờ xác nhận' || params.value === 0">Chờ xác nhận</nz-tag>
+<nz-tag [nzColor]="'green'" *ngIf="params.value === 'Đang lấy hàng' || params.value === 1">Đang lấy hàng</nz-tag>
+<nz-tag [nzColor]="'yellow'" *ngIf="params.value === 'Đang giao hàng' || params.value === 2">Đang giao hàng</nz-tag>
+<nz-tag [nzColor]="'#00BB00'" *ngIf="params.value === 'Đã giao hàng' || params.value === 3">Đã giao hàng</nz-tag>
+<nz-tag [nzColor]="'#EE4E2E'" *ngIf="params.value === 'Đã đánh giá' || params.value === 5">Đã đánh giá</nz-tag>
+<nz-tag [nzColor]="'red'" *ngIf="params.value === 'Đã hủy' || params.value === -1">Đã hủy</nz-tag>

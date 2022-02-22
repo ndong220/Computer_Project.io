@@ -1,0 +1,1343 @@
+<nz-modal
+  nzWidth="800px"
+  [(nzVisible)]="isVisible"
+  nzTitle="Đánh giá sản phẩm"
+  [nzAutofocus]="false"
+  (nzOnCancel)="handleCancel()"
+  [nzFooter]="nzFooter"
+>
+  <ng-container *nzModalContent>
+    <div class="overflow-auto" nz-row>
+      <div
+        *ngFor="
+          let prod of itemRate.listProducts | slice: (pageIndexRate - 1) * pageSizeRate:(pageIndexRate - 1) * pageSizeRate + pageSizeRate
+        "
+        class="row"
+        style="margin-bottom: 10px; border-bottom: 1px solid #eaeaea"
+      >
+        <div class="col-md-2">
+          <img [src]="baseFile + prod.pictures[0]" width="100" height="100" alt="Product Image" />
+        </div>
+        <div class="col-md-10">
+          <div class="row">
+            <div class="col-md-12">
+              <p (click)="viewProdDetail(prod.code)" style="font-weight: bold; cursor: pointer">
+                {{ prod.name }}
+              </p>
+            </div>
+            <div class="col-md-12">
+              <p class="text-muted font-weight-normal font-italic d-block">
+                Loại sản phẩm:
+                <span>{{ prod.categoryString }}</span>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 item-center">
+          <nz-rate (ngModelChange)="checkValidRate($event, prod.id)" [(ngModel)]="prod.rate"></nz-rate>
+          <span *ngIf="prod.rate" class="ant-rate-text">{{ prod.rate ? tooltips[value - 1] : '' }}</span>
+        </div>
+        <div class="col-md-12 item-center">
+          <textarea *ngIf="prod.rate" rows="4" nz-input [(ngModel)]="prod.inputValue"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 item-center">
+      <nz-pagination [(nzPageIndex)]="pageIndexRate" [nzPageSize]="pageSizeRate" [nzTotal]="itemRate.listProducts.length"> </nz-pagination>
+    </div>
+  </ng-container>
+  <ng-template #nzFooter>
+    <button nz-button nzType="primary" nzDanger [disabled]="checkIsRate" (click)="submitRate()">Hoàn thành</button>
+    <button nz-button nzType="default" (click)="handleCancel()">Đóng</button>
+  </ng-template>
+</nz-modal>
+<div class="row">
+  <div class="col-md-10 offset">
+    <ul class="breadcrumb">
+      <li><a href="javascript:void(0)" [routerLink]="'/home'">Trang chủ</a></li>
+      <li>Thông tin tài khoản</li>
+    </ul>
+    <div class="row">
+      <div class="col-md-3">
+        <div class="row">
+          <div class="col-md-6 item-center">
+            <nz-avatar [nzSize]="64" [nzSrc]="avatar" nzIcon="user"></nz-avatar>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-12">
+            <nz-tabset [nzSelectedIndex]="index" (nzSelectChange)="tabSelectChange($event)" [nzTabPosition]="position">
+              <nz-tab [nzTitle]="userTemplate">
+                <ng-template #userTemplate>
+                  <img height="16" width="16" src="../../../../assets/img/Graphicloads-Flat-Finance-Person.ico" alt="" />
+                  Tài Khoản Của Tôi
+                </ng-template>
+
+                <nz-card [nzTitle]="titleTemplate">
+                  <ng-template #titleTemplate>
+                    <h3><b>Hồ Sơ Của Tôi</b></h3>
+                    <p>Quản lý thông tin hồ sơ để bảo mật tài khoản</p>
+                  </ng-template>
+                  <div nz-row nzGutter="8">
+                    <div nz-col nzSpan="20">
+                      <form nz-form [formGroup]="formRegister" (ngSubmit)="submitForm()">
+                        <nz-form-item>
+                          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="username" nzRequired>Tên tài khoản </nz-form-label>
+                          <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Vui lòng nhập tên tài khoản!">
+                            <input nz-input id="username" formControlName="username" placeholder="Tên tài khoản" />
+                          </nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item>
+                          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="email">E-mail </nz-form-label>
+                          <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="không đúng định dạng E-mail!">
+                            <input nz-input placeholder="Email" formControlName="email" id="email" />
+                          </nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item>
+                          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="nickname" nzRequired>
+                            <span>Tên</span>
+                          </nz-form-label>
+                          <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Nhập vào tên!">
+                            <input nz-input id="nickname" placeholder="Tên" formControlName="nickname" />
+                          </nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item>
+                          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="phoneNumber" nzRequired>Số điện thoại </nz-form-label>
+                          <nz-form-control
+                            [nzSm]="14"
+                            [nzXs]="24"
+                            [nzValidateStatus]="formRegister.controls['phoneNumber']"
+                            nzErrorTip="Vui lòng nhập số điện thoại!"
+                          >
+                            <nz-input-group [nzAddOnBefore]="addOnBeforeTemplate">
+                              <ng-template #addOnBeforeTemplate>
+                                <nz-select formControlName="phoneNumberPrefix" class="phone-select">
+                                  <nz-option nzLabel="+84" nzValue="+84"></nz-option>
+                                </nz-select>
+                              </ng-template>
+                              <input formControlName="phoneNumber" id="'phoneNumber'" nz-input />
+                            </nz-input-group>
+                          </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-item>
+                          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="dateOfBirth" nzRequired>
+                            <span>Ngày sinh</span>
+                          </nz-form-label>
+                          <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Nhập vào ngày sinh!">
+                            <nz-date-picker [nzPlaceHolder]="'Nhập vào ngày sinh'" [nzAllowClear]="false" formControlName="dateOfBirth">
+                            </nz-date-picker>
+                          </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-item>
+                          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="sex" nzRequired>Giới tính </nz-form-label>
+                          <nz-form-control
+                            [nzSm]="14"
+                            [nzXs]="24"
+                            [nzValidateStatus]="formRegister.controls['sex']"
+                            nzErrorTip="Vui lòng chọn giới tính!"
+                          >
+                            <nz-radio-group formControlName="sex">
+                              <label nz-radio [nzValue]="true">Nam</label>
+                              <label nz-radio [nzValue]="false">Nữ</label>
+                            </nz-radio-group>
+                          </nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item nz-row class="register-area">
+                          <nz-form-control [nzSpan]="14" [nzOffset]="6">
+                            <button nz-button nzType="primary">Lưu</button>
+                          </nz-form-control>
+                        </nz-form-item>
+                      </form>
+                    </div>
+                    <div nz-col nzSpan="4">
+                      <div class="row">
+                        <div class="col-md-12 item-center">
+                          <nz-avatar [nzSize]="72" [nzSrc]="avatarDisplayUrl" nzIcon="user"></nz-avatar>
+                        </div>
+                        <div style="margin-top: 10px; text-align: center" class="col-md-12">
+                          <nz-upload
+                            [nzShowUploadList]="false"
+                            [nzBeforeUpload]="beforeUpload"
+                            nzMultiple="false"
+                            (nzChange)="handleChange($event)"
+                            [nzAction]="uploadUrl"
+                            [nzHeaders]="{ authorization: 'authorization-text' }"
+                          >
+                            <button nz-button><i nz-icon nzType="upload"></i>Chọn Ảnh</button>
+                          </nz-upload>
+                          <p>Dụng lượng file tối đa 2 MB</p>
+                          <p>Định dạng:.JPEG, .PNG</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </nz-card>
+              </nz-tab>
+              <nz-tab [nzTitle]="billTemplate">
+                <ng-template #billTemplate>
+                  <img
+                    height="16"
+                    width="16"
+                    src="../../../../assets/img/Dakirby309-Windows-8-Metro-Folders-OS-Documents-Library-Metro.ico"
+                    alt=""
+                  />
+                  Đơn Mua
+                </ng-template>
+
+                <nz-card [nzTitle]="billTitle">
+                  <ng-template #billTitle>
+                    <h3><b>Đơn hàng của tôi</b></h3>
+                    <p>Quản lý đơn hàng của bạn</p>
+                  </ng-template>
+                  <div *ngIf="viewDetail === false" nz-row nzGutter="8">
+                    <div class="col-md-12">
+                      <nz-input-group nz-col nzSpan="24" [nzSuffix]="suffixIconSearch">
+                        <input
+                          type="text"
+                          style="text-align: center"
+                          [(ngModel)]="ts"
+                          (ngModelChange)="changeText($event)"
+                          nz-input
+                          placeholder="Nhập mã đơn hàng"
+                        />
+                      </nz-input-group>
+                      <ng-template #suffixIconSearch>
+                        <i nz-icon nzType="search"></i>
+                      </ng-template>
+                    </div>
+                    <div class="warpper col-md-12">
+                      <input class="radio" id="one" name="group" type="radio" checked />
+                      <input class="radio" id="two" name="group" type="radio" />
+                      <input class="radio" id="three" name="group" type="radio" />
+                      <input class="radio" id="four" name="group" type="radio" />
+                      <input class="radio" id="five" name="group" type="radio" />
+                      <input class="radio" id="six" name="group" type="radio" />
+                      <div class="tabs" style="display: flex; align-items: center; justify-content: center">
+                        <label class="tab col-md-2" id="one-tab" (click)="changeTab()" for="one">Tất cả</label>
+                        <label class="tab col-md-2" id="two-tab" (click)="changeTab()" for="two">Chờ xác nhận</label>
+                        <label class="tab col-md-2" id="three-tab" (click)="changeTab()" for="three">Chờ lấy hàng</label>
+                        <label class="tab col-md-2" id="four-tab" (click)="changeTab()" for="four">Đang giao hàng</label>
+                        <label class="tab col-md-2" id="five-tab" (click)="changeTab()" for="five">Đã giao hàng</label>
+                        <label class="tab col-md-2" id="six-tab" (click)="changeTab()" for="six">Đã hủy</label>
+                      </div>
+                      <div class="panels">
+                        <div class="panel" id="one-panel">
+                          <div class="order-item" *ngIf="listOrderAll.length > 0">
+                            <div
+                              class="row"
+                              *ngFor="let item of listOrderAll | slice: (pageIndex - 1) * pageSize:(pageIndex - 1) * pageSize + pageSize"
+                            >
+                              <div class="col-md-12">
+                                <nz-card style="width: 100%" [nzTitle]="allTitle">
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <div *ngFor="let prod of item.listProducts" class="row" style="border-bottom: 1px solid #eaeaea">
+                                        <div class="col-md-2">
+                                          <img [src]="baseFile + prod.pictures[0]" width="100" height="100" alt="Product Image" />
+                                        </div>
+                                        <div class="col-md-8">
+                                          <div class="row">
+                                            <div class="col-md-12">
+                                              <p (click)="viewProdDetail(prod.code)" style="font-weight: bold; cursor: pointer">
+                                                {{ prod.name }}
+                                              </p>
+                                            </div>
+                                            <div class="col-md-12">
+                                              <p class="text-muted font-weight-normal font-italic d-block">
+                                                Loại sản phẩm:
+                                                <span>{{ prod.categoryName.toString() }}</span>
+                                              </p>
+                                            </div>
+                                            <div class="col-md-12">
+                                              <p style="font-weight: bold">x{{ prod.count }}</p>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div class="col-md-2 item-center flex-block">
+                                          <h5 class="price-out">{{ prod.price | currency: 'VND' }}</h5>
+                                          <h5>{{ prod.price - prod.discount | currency: 'VND' }}</h5>
+                                        </div>
+                                      </div>
+                                      <div class="row">
+                                        <div class="col-md-12 pull-right">
+                                          <img class="img-price" src="../../../../assets/img/price.png" alt="" />
+                                          Tổng số tiền:
+                                          <span style="font-size: 25px" class="text-red">{{ item.grandTotal | currency: 'VND' }}</span>
+                                        </div>
+                                      </div>
+                                      <div class="row">
+                                        <div class="col-md-12 pull-right">
+                                          <button
+                                            nz-button
+                                            [nzDanger]="item.status === 3"
+                                            [ngClass]="{ 'text-highlight': item.status === 3 ? true : false }"
+                                            *ngIf="item.status === 3"
+                                            nzType="default"
+                                          >
+                                            Đánh giá
+                                          </button>
+                                          <button (click)="viewDetailOrder(item)" nz-button nzType="default">Chi tiết đơn hàng</button>
+                                          <button
+                                            [nzDanger]="item.status === -1"
+                                            (click)="buildAgain()"
+                                            [ngClass]="{ 'text-highlight': item.status === -1 ? true : false }"
+                                            *ngIf="item.status === 3 || item.status === -1"
+                                            nz-button
+                                            nzType="default"
+                                          >
+                                            Mua lần nữa
+                                          </button>
+                                          <button
+                                            *ngIf="item.status === 0 || (item.status === 1 && item.status !== -1)"
+                                            nz-button
+                                            nzType="default"
+                                            (click)="cancelOrder(item)"
+                                          >
+                                            Hủy đơn hàng
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </nz-card>
+                                <ng-template #allTitle>
+                                  <div class="row">
+                                    <div class="col-md-2 text-name-order">Đơn hàng {{ item.code }}</div>
+                                    <div class="col-md-10 pull-right">
+                                      <div *ngIf="item.status === 0" class="text-status">Chờ xác nhận</div>
+                                      <div *ngIf="item.status === 1" class="text-status">Chờ lấy hàng</div>
+                                      <div *ngIf="item.status === 2" class="text-status">Đang giao hàng</div>
+                                      <div *ngIf="item.status === 3" class="text-status">
+                                        <span style="color: black"><i class="fas fa-truck"></i> Giao hàng thành công |</span> Đã giao hàng
+                                      </div>
+                                      <div *ngIf="item.status === -1" class="text-status">Đã hủy</div>
+                                    </div>
+                                  </div>
+                                </ng-template>
+                              </div>
+                            </div>
+                            <nz-pagination
+                              style="float: right; margin-top: 15px"
+                              [(nzPageIndex)]="pageIndex"
+                              [(nzPageSize)]="pageSize"
+                              [nzTotal]="listOrderAll.length"
+                            >
+                            </nz-pagination>
+                          </div>
+                          <div class="null-item">
+                            <div class="row">
+                              <div *ngIf="listOrderAll.length === 0" style="height: 400px" class="col-md-12 item-center">
+                                <img style="width: 6.25rem; height: 6.25rem" src="../../../../assets/img/null.png" alt="Null Order" />
+                                <br />
+                                <p>Chưa có đơn hàng</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="panel" id="two-panel">
+                          <div class="order-item" *ngIf="listOrder0.length > 0">
+                            <div
+                              class="row"
+                              *ngFor="let item of listOrder0 | slice: (pageIndex - 1) * pageSize:(pageIndex - 1) * pageSize + pageSize"
+                            >
+                              <div class="col-md-12">
+                                <nz-card style="width: 100%" [nzTitle]="allTitle">
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <div *ngFor="let prod of item.listProducts" class="row" style="border-bottom: 1px solid #eaeaea">
+                                        <div class="col-md-2">
+                                          <img [src]="baseFile + prod.pictures[0]" width="100" height="100" alt="Product Image" />
+                                        </div>
+                                        <div class="col-md-8">
+                                          <div class="row">
+                                            <div class="col-md-12">
+                                              <p (click)="viewProdDetail(prod.code)" style="font-weight: bold; cursor: pointer">
+                                                {{ prod.name }}
+                                              </p>
+                                            </div>
+                                            <div class="col-md-12">
+                                              <p class="text-muted font-weight-normal font-italic d-block">
+                                                Loại sản phẩm:
+                                                <span>{{ prod.categoryString }}</span>
+                                              </p>
+                                            </div>
+                                            <div class="col-md-12">
+                                              <p style="font-weight: bold">x{{ prod.count }}</p>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div class="col-md-2 item-center flex-block">
+                                          <h5 class="price-out">{{ prod.price | currency: 'VND' }}</h5>
+                                          <h5>{{ prod.price - prod.discount | currency: 'VND' }}</h5>
+                                        </div>
+                                      </div>
+                                      <div class="row">
+                                        <div class="col-md-12 pull-right">
+                                          <img class="img-price" src="../../../../assets/img/price.png" alt="" />
+                                          Tổng số tiền:
+                                          <span style="font-size: 25px" class="text-red">{{ item.grandTotal | currency: 'VND' }}</span>
+                                        </div>
+                                      </div>
+                                      <div class="row">
+                                        <div class="col-md-12 pull-right">
+                                          <button
+                                            nz-button
+                                            [nzDanger]="item.status === 3"
+                                            [ngClass]="{ 'text-highlight': item.status === 3 ? true : false }"
+                                            *ngIf="item.status === 3"
+                                            nzType="default"
+                                          >
+                                            Đánh giá
+                                          </button>
+                                          <button (click)="viewDetailOrder(item)" nz-button nzType="default">Chi tiết đơn hàng</button>
+                                          <button
+                                            [nzDanger]="item.status === -1"
+                                            (click)="buildAgain()"
+                                            [ngClass]="{ 'text-highlight': item.status === -1 ? true : false }"
+                                            *ngIf="item.status === 3 || item.status === -1"
+                                            nz-button
+                                            nzType="default"
+                                          >
+                                            Mua lần nữa
+                                          </button>
+                                          <button
+                                            *ngIf="item.status === 0 || (item.status === 1 && item.status !== -1)"
+                                            nz-button
+                                            nzType="default"
+                                            (click)="cancelOrder(item)"
+                                          >
+                                            Hủy đơn hàng
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </nz-card>
+                                <ng-template #allTitle>
+                                  <div class="row">
+                                    <div class="col-md-2 text-name-order">Đơn hàng {{ item.code }}</div>
+                                    <div class="col-md-10 pull-right">
+                                      <div *ngIf="item.status === 0" class="text-status">Chờ xác nhận</div>
+                                      <div *ngIf="item.status === 1" class="text-status">Chờ lấy hàng</div>
+                                      <div *ngIf="item.status === 2" class="text-status">Đang giao hàng</div>
+                                      <div *ngIf="item.status === 3" class="text-status">
+                                        <span style="color: black"><i class="fas fa-truck"></i> Giao hàng thành công |</span> Đã giao hàng
+                                      </div>
+                                      <div *ngIf="item.status === -1" class="text-status">Đã hủy</div>
+                                    </div>
+                                  </div>
+                                </ng-template>
+                              </div>
+                            </div>
+                            <nz-pagination
+                              style="float: right; margin-top: 15px"
+                              [(nzPageIndex)]="pageIndex"
+                              [(nzPageSize)]="pageSize"
+                              [nzTotal]="listOrder0.length"
+                            >
+                            </nz-pagination>
+                          </div>
+                          <div class="null-item">
+                            <div class="row">
+                              <div *ngIf="listOrder0.length === 0" style="height: 400px" class="col-md-12 item-center">
+                                <img style="width: 6.25rem; height: 6.25rem" src="../../../../assets/img/null.png" alt="Null Order" />
+                                <br />
+                                <p>Chưa có đơn hàng</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="panel" id="three-panel">
+                          <div class="order-item" *ngIf="listOrder1.length > 0">
+                            <div
+                              class="row"
+                              *ngFor="let item of listOrder1 | slice: (pageIndex - 1) * pageSize:(pageIndex - 1) * pageSize + pageSize"
+                            >
+                              <div class="col-md-12">
+                                <nz-card style="width: 100%" [nzTitle]="allTitle">
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <div *ngFor="let prod of item.listProducts" class="row" style="border-bottom: 1px solid #eaeaea">
+                                        <div class="col-md-2">
+                                          <img [src]="baseFile + prod.pictures[0]" width="100" height="100" alt="Product Image" />
+                                        </div>
+                                        <div class="col-md-8">
+                                          <div class="row">
+                                            <div class="col-md-12">
+                                              <p (click)="viewProdDetail(prod.code)" style="font-weight: bold; cursor: pointer">
+                                                {{ prod.name }}
+                                              </p>
+                                            </div>
+                                            <div class="col-md-12">
+                                              <p class="text-muted font-weight-normal font-italic d-block">
+                                                Loại sản phẩm:
+                                                <span>{{ prod.categoryString }}</span>
+                                              </p>
+                                            </div>
+                                            <div class="col-md-12">
+                                              <p style="font-weight: bold">x{{ prod.count }}</p>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div class="col-md-2 item-center flex-block">
+                                          <h5 class="price-out">{{ prod.price | currency: 'VND' }}</h5>
+                                          <h5>{{ prod.price - prod.discount | currency: 'VND' }}</h5>
+                                        </div>
+                                      </div>
+                                      <div class="row">
+                                        <div class="col-md-12 pull-right">
+                                          <img class="img-price" src="../../../../assets/img/price.png" alt="" />
+                                          Tổng số tiền:
+                                          <span style="font-size: 25px" class="text-red">{{ item.grandTotal | currency: 'VND' }}</span>
+                                        </div>
+                                      </div>
+                                      <div class="row">
+                                        <div class="col-md-12 pull-right">
+                                          <button
+                                            nz-button
+                                            [nzDanger]="item.status === 3"
+                                            [ngClass]="{ 'text-highlight': item.status === 3 ? true : false }"
+                                            *ngIf="item.status === 3"
+                                            nzType="default"
+                                          >
+                                            Đánh giá
+                                          </button>
+                                          <button (click)="viewDetailOrder(item)" nz-button nzType="default">Chi tiết đơn hàng</button>
+                                          <button
+                                            [nzDanger]="item.status === -1"
+                                            (click)="buildAgain()"
+                                            [ngClass]="{ 'text-highlight': item.status === -1 ? true : false }"
+                                            *ngIf="item.status === 3 || item.status === -1"
+                                            nz-button
+                                            nzType="default"
+                                          >
+                                            Mua lần nữa
+                                          </button>
+                                          <button
+                                            *ngIf="item.status === 0 || (item.status === 1 && item.status !== -1)"
+                                            nz-button
+                                            nzType="default"
+                                            (click)="cancelOrder(item)"
+                                          >
+                                            Hủy đơn hàng
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </nz-card>
+                                <ng-template #allTitle>
+                                  <div class="row">
+                                    <div class="col-md-2 text-name-order">Đơn hàng {{ item.code }}</div>
+                                    <div class="col-md-10 pull-right">
+                                      <div *ngIf="item.status === 0" class="text-status">Chờ xác nhận</div>
+                                      <div *ngIf="item.status === 1" class="text-status">Chờ lấy hàng</div>
+                                      <div *ngIf="item.status === 2" class="text-status">Đang giao hàng</div>
+                                      <div *ngIf="item.status === 3" class="text-status">
+                                        <span style="color: black"><i class="fas fa-truck"></i> Giao hàng thành công |</span> Đã giao hàng
+                                      </div>
+                                      <div *ngIf="item.status === -1" class="text-status">Đã hủy</div>
+                                    </div>
+                                  </div>
+                                </ng-template>
+                              </div>
+                            </div>
+                            <nz-pagination
+                              style="float: right; margin-top: 15px"
+                              [(nzPageIndex)]="pageIndex"
+                              [(nzPageSize)]="pageSize"
+                              [nzTotal]="listOrder1.length"
+                            >
+                            </nz-pagination>
+                          </div>
+                          <div class="null-item">
+                            <div class="row">
+                              <div *ngIf="listOrder1.length === 0" style="height: 400px" class="col-md-12 item-center">
+                                <img style="width: 6.25rem; height: 6.25rem" src="../../../../assets/img/null.png" alt="Null Order" />
+                                <br />
+                                <p>Chưa có đơn hàng</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="panel" id="four-panel">
+                          <div class="order-item" *ngIf="listOrder2.length > 0">
+                            <div
+                              class="row"
+                              *ngFor="let item of listOrder2 | slice: (pageIndex - 1) * pageSize:(pageIndex - 1) * pageSize + pageSize"
+                            >
+                              <div class="col-md-12">
+                                <nz-card style="width: 100%" [nzTitle]="allTitle">
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <div *ngFor="let prod of item.listProducts" class="row" style="border-bottom: 1px solid #eaeaea">
+                                        <div class="col-md-2">
+                                          <img [src]="baseFile + prod.pictures[0]" width="100" height="100" alt="Product Image" />
+                                        </div>
+                                        <div class="col-md-8">
+                                          <div class="row">
+                                            <div class="col-md-12">
+                                              <p (click)="viewProdDetail(prod.code)" style="font-weight: bold; cursor: pointer">
+                                                {{ prod.name }}
+                                              </p>
+                                            </div>
+                                            <div class="col-md-12">
+                                              <p class="text-muted font-weight-normal font-italic d-block">
+                                                Loại sản phẩm:
+                                                <span>{{ prod.categoryString }}</span>
+                                              </p>
+                                            </div>
+                                            <div class="col-md-12">
+                                              <p style="font-weight: bold">x{{ prod.count }}</p>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div class="col-md-2 item-center flex-block">
+                                          <h5 class="price-out">{{ prod.price | currency: 'VND' }}</h5>
+                                          <h5>{{ prod.price - prod.discount | currency: 'VND' }}</h5>
+                                        </div>
+                                      </div>
+                                      <div class="row">
+                                        <div class="col-md-12 pull-right">
+                                          <img class="img-price" src="../../../../assets/img/price.png" alt="" />
+                                          Tổng số tiền:
+                                          <span style="font-size: 25px" class="text-red">{{ item.grandTotal | currency: 'VND' }}</span>
+                                        </div>
+                                      </div>
+                                      <div class="row">
+                                        <div class="col-md-12 pull-right">
+                                          <button
+                                            nz-button
+                                            [nzDanger]="item.status === 3"
+                                            [ngClass]="{ 'text-highlight': item.status === 3 ? true : false }"
+                                            *ngIf="item.status === 3"
+                                            nzType="default"
+                                          >
+                                            Đánh giá
+                                          </button>
+                                          <button (click)="changeStatus(item)" class="text-highlight" nz-button nzType="default">
+                                            Đã nhận được hàng
+                                          </button>
+                                          <button (click)="viewDetailOrder(item)" nz-button nzType="default">Chi tiết đơn hàng</button>
+                                          <button
+                                            [nzDanger]="item.status === -1"
+                                            (click)="buildAgain()"
+                                            [ngClass]="{ 'text-highlight': item.status === -1 ? true : false }"
+                                            *ngIf="item.status === 3 || item.status === -1"
+                                            nz-button
+                                            nzType="default"
+                                          >
+                                            Mua lần nữa
+                                          </button>
+                                          <button
+                                            *ngIf="item.status === 0 || (item.status === 1 && item.status !== -1)"
+                                            nz-button
+                                            nzType="default"
+                                            (click)="cancelOrder(item)"
+                                          >
+                                            Hủy đơn hàng
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </nz-card>
+                                <ng-template #allTitle>
+                                  <div class="row">
+                                    <div class="col-md-2 text-name-order">Đơn hàng {{ item.code }}</div>
+                                    <div class="col-md-10 pull-right">
+                                      <div *ngIf="item.status === 0" class="text-status">Chờ xác nhận</div>
+                                      <div *ngIf="item.status === 1" class="text-status">Chờ lấy hàng</div>
+                                      <div *ngIf="item.status === 2" class="text-status">Đang giao hàng</div>
+                                      <div *ngIf="item.status === 3" class="text-status">
+                                        <span style="color: black"><i class="fas fa-truck"></i> Giao hàng thành công |</span> Đã giao hàng
+                                      </div>
+                                      <div *ngIf="item.status === -1" class="text-status">Đã hủy</div>
+                                    </div>
+                                  </div>
+                                </ng-template>
+                              </div>
+                            </div>
+                            <nz-pagination
+                              style="float: right; margin-top: 15px"
+                              [(nzPageIndex)]="pageIndex"
+                              [(nzPageSize)]="pageSize"
+                              [nzTotal]="listOrder2.length"
+                            >
+                            </nz-pagination>
+                          </div>
+                          <div class="null-item">
+                            <div class="row">
+                              <div *ngIf="listOrder2.length === 0" style="height: 400px" class="col-md-12 item-center">
+                                <img style="width: 6.25rem; height: 6.25rem" src="../../../../assets/img/null.png" alt="Null Order" />
+                                <br />
+                                <p>Chưa có đơn hàng</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="panel" id="five-panel">
+                          <div class="order-item" *ngIf="listOrder3.length > 0">
+                            <div
+                              class="row"
+                              *ngFor="let item of listOrder3 | slice: (pageIndex - 1) * pageSize:(pageIndex - 1) * pageSize + pageSize"
+                            >
+                              <div class="col-md-12">
+                                <nz-card style="width: 100%" [nzTitle]="allTitle">
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <div *ngFor="let prod of item.listProducts" class="row" style="border-bottom: 1px solid #eaeaea">
+                                        <div class="col-md-2">
+                                          <img [src]="baseFile + prod.pictures[0]" width="100" height="100" alt="Product Image" />
+                                        </div>
+                                        <div class="col-md-8">
+                                          <div class="row">
+                                            <div class="col-md-12">
+                                              <p (click)="viewProdDetail(prod.code)" style="font-weight: bold; cursor: pointer">
+                                                {{ prod.name }}
+                                              </p>
+                                            </div>
+                                            <div class="col-md-12">
+                                              <p class="text-muted font-weight-normal font-italic d-block">
+                                                Loại sản phẩm:
+                                                <span>{{ prod.categoryString }}</span>
+                                              </p>
+                                            </div>
+                                            <div class="col-md-12">
+                                              <p style="font-weight: bold">x{{ prod.count }}</p>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div class="col-md-2 item-center flex-block">
+                                          <h5 class="price-out">{{ prod.price | currency: 'VND' }}</h5>
+                                          <h5>{{ prod.price - prod.discount | currency: 'VND' }}</h5>
+                                        </div>
+                                      </div>
+                                      <div class="row">
+                                        <div class="col-md-12 pull-right">
+                                          <img class="img-price" src="../../../../assets/img/price.png" alt="" />
+                                          Tổng số tiền:
+                                          <span style="font-size: 25px" class="text-red">{{ item.grandTotal | currency: 'VND' }}</span>
+                                        </div>
+                                      </div>
+                                      <div class="row">
+                                        <div class="col-md-12 pull-right">
+                                          <button
+                                            (click)="rate(item)"
+                                            nz-button
+                                            [nzDanger]="item.status === 3"
+                                            [ngClass]="{ 'text-highlight': item.status === 3 ? true : false }"
+                                            *ngIf="item.status === 3"
+                                            nzType="default"
+                                          >
+                                            Đánh giá
+                                          </button>
+                                          <button (click)="viewDetailOrder(item)" nz-button nzType="default">Chi tiết đơn hàng</button>
+                                          <button
+                                            [nzDanger]="item.status === -1"
+                                            (click)="buildAgain()"
+                                            [ngClass]="{ 'text-highlight': item.status === -1 ? true : false }"
+                                            *ngIf="item.status === 3 || item.status === -1 || item.status === 5"
+                                            nz-button
+                                            nzType="default"
+                                          >
+                                            Mua lần nữa
+                                          </button>
+                                          <button
+                                            *ngIf="item.status === 0 || (item.status === 1 && item.status !== -1)"
+                                            nz-button
+                                            nzType="default"
+                                            (click)="cancelOrder(item)"
+                                          >
+                                            Hủy đơn hàng
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </nz-card>
+                                <ng-template #allTitle>
+                                  <div class="row">
+                                    <div class="col-md-2 text-name-order">Đơn hàng {{ item.code }}</div>
+                                    <div class="col-md-10 pull-right">
+                                      <div *ngIf="item.status === 0" class="text-status">Chờ xác nhận</div>
+                                      <div *ngIf="item.status === 1" class="text-status">Chờ lấy hàng</div>
+                                      <div *ngIf="item.status === 2" class="text-status">Đang giao hàng</div>
+                                      <div *ngIf="item.status === 3" class="text-status">
+                                        <span style="color: black"><i class="fas fa-truck"></i> Giao hàng thành công |</span> Đã giao hàng
+                                      </div>
+                                      <div *ngIf="item.status === -1" class="text-status">Đã hủy</div>
+                                    </div>
+                                  </div>
+                                </ng-template>
+                              </div>
+                            </div>
+                            <nz-pagination
+                              style="float: right; margin-top: 15px"
+                              [(nzPageIndex)]="pageIndex"
+                              [(nzPageSize)]="pageSize"
+                              [nzTotal]="listOrder3.length"
+                            >
+                            </nz-pagination>
+                          </div>
+                          <div class="null-item">
+                            <div class="row">
+                              <div *ngIf="listOrder3.length === 0" style="height: 400px" class="col-md-12 item-center">
+                                <img style="width: 6.25rem; height: 6.25rem" src="../../../../assets/img/null.png" alt="Null Order" />
+                                <br />
+                                <p>Chưa có đơn hàng</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="panel" id="six-panel">
+                          <div class="order-item" *ngIf="listOrder_1.length > 0">
+                            <div
+                              class="row"
+                              *ngFor="let item of listOrder_1 | slice: (pageIndex - 1) * pageSize:(pageIndex - 1) * pageSize + pageSize"
+                            >
+                              <div class="col-md-12">
+                                <nz-card style="width: 100%" [nzTitle]="allTitle">
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <div *ngFor="let prod of item.listProducts" class="row" style="border-bottom: 1px solid #eaeaea">
+                                        <div class="col-md-2">
+                                          <img [src]="baseFile + prod.pictures[0]" width="100" height="100" alt="Product Image" />
+                                        </div>
+                                        <div class="col-md-8">
+                                          <div class="row">
+                                            <div class="col-md-12">
+                                              <p (click)="viewProdDetail(prod.code)" style="font-weight: bold; cursor: pointer">
+                                                {{ prod.name }}
+                                              </p>
+                                            </div>
+                                            <div class="col-md-12">
+                                              <p class="text-muted font-weight-normal font-italic d-block">
+                                                Loại sản phẩm:
+                                                <span>{{ prod.categoryString }}</span>
+                                              </p>
+                                            </div>
+                                            <div class="col-md-12">
+                                              <p style="font-weight: bold">x{{ prod.count }}</p>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div class="col-md-2 item-center flex-block">
+                                          <h5 class="price-out">{{ prod.price | currency: 'VND' }}</h5>
+                                          <h5>{{ prod.price - prod.discount | currency: 'VND' }}</h5>
+                                        </div>
+                                      </div>
+                                      <div class="row">
+                                        <div class="col-md-12 pull-right">
+                                          <img class="img-price" src="../../../../assets/img/price.png" alt="" />
+                                          Tổng số tiền:
+                                          <span style="font-size: 25px" class="text-red">{{ item.grandTotal | currency: 'VND' }}</span>
+                                        </div>
+                                      </div>
+                                      <div class="row">
+                                        <div class="col-md-12 pull-right">
+                                          <button
+                                            nz-button
+                                            [nzDanger]="item.status === 3"
+                                            [ngClass]="{ 'text-highlight': item.status === 3 ? true : false }"
+                                            *ngIf="item.status === 3"
+                                            nzType="default"
+                                          >
+                                            Đánh giá
+                                          </button>
+                                          <button (click)="viewDetailOrder(item)" nz-button nzType="default">Chi tiết đơn hàng</button>
+
+                                          <button
+                                            [nzDanger]="item.status === -1"
+                                            (click)="buildAgain()"
+                                            [ngClass]="{ 'text-highlight': item.status === -1 ? true : false }"
+                                            *ngIf="item.status === 3 || item.status === -1"
+                                            nz-button
+                                            nzType="default"
+                                          >
+                                            Mua lần nữa
+                                          </button>
+                                          <button
+                                            *ngIf="item.status === 0 || (item.status === 1 && item.status !== -1)"
+                                            nz-button
+                                            nzType="default"
+                                            (click)="cancelOrder(item)"
+                                          >
+                                            Hủy đơn hàng
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </nz-card>
+                                <ng-template #allTitle>
+                                  <div class="row">
+                                    <div class="col-md-2 text-name-order">Đơn hàng {{ item.code }}</div>
+                                    <div class="col-md-10 pull-right">
+                                      <div *ngIf="item.status === 0" class="text-status">Chờ xác nhận</div>
+                                      <div *ngIf="item.status === 1" class="text-status">Chờ lấy hàng</div>
+                                      <div *ngIf="item.status === 2" class="text-status">Đang giao hàng</div>
+                                      <div *ngIf="item.status === 3" class="text-status">
+                                        <span style="color: black"><i class="fas fa-truck"></i> Giao hàng thành công |</span> Đã giao hàng
+                                      </div>
+                                      <div *ngIf="item.status === -1" class="text-status">Đã hủy</div>
+                                    </div>
+                                  </div>
+                                </ng-template>
+                              </div>
+                            </div>
+                            <nz-pagination
+                              style="float: right; margin-top: 15px"
+                              [(nzPageIndex)]="pageIndex"
+                              [(nzPageSize)]="pageSize"
+                              [nzTotal]="listOrder_1.length"
+                            >
+                            </nz-pagination>
+                          </div>
+                          <div class="null-item">
+                            <div class="row">
+                              <div *ngIf="listOrder_1.length === 0" style="height: 400px" class="col-md-12 item-center">
+                                <img style="width: 6.25rem; height: 6.25rem" src="../../../../assets/img/null.png" alt="Null Order" />
+                                <br />
+                                <p>Chưa có đơn hàng</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div *ngIf="viewDetail === true" nz-row nzGutter="8">
+                    <nz-card class="col-md-12" [nzTitle]="detailTitle">
+                      <ng-template #detailTitle>
+                        <div class="row">
+                          <div class="col-md-2">
+                            <nz-page-header class="site-page-header" (nzBack)="onBack()" nzBackIcon nzTitle="Quay lại"> </nz-page-header>
+                          </div>
+                          <div class="col-md-10 pull-right">
+                            <div *ngIf="itemDetail.status === 0" class="text-status">
+                              <span style="color: black">Đơn hàng {{ itemDetail.code }}</span> | Chờ xác nhận
+                            </div>
+                            <div *ngIf="itemDetail.status === 1" class="text-status">
+                              <span style="color: black">Đơn hàng {{ itemDetail.code }}</span> | Chờ lấy hàng
+                            </div>
+                            <div *ngIf="itemDetail.status === 2" class="text-status">
+                              <span style="color: black">Đơn hàng {{ itemDetail.code }}</span> | Đang giao hàng
+                            </div>
+                            <div *ngIf="itemDetail.status === 3" class="text-status">
+                              <span style="color: black"
+                                ><i class="fas fa-truck"></i><span style="color: black">Đơn hàng {{ itemDetail.code }}</span> | Giao hàng
+                                thành công |</span
+                              >
+                              Đã giao hàng
+                            </div>
+                            <div *ngIf="itemDetail.status === -1" class="text-status">
+                              <span style="color: black">Đơn hàng {{ itemDetail.code }}</span> | Đã hủy
+                            </div>
+                          </div>
+                        </div>
+                      </ng-template>
+                      <nz-steps *ngIf="itemDetail.status !== -1" nzLabelPlacement="vertical" [nzCurrent]="1">
+                        <nz-step
+                          nzTitle="Đơn hàng đã đặt"
+                          [nzIcon]="iconCreate"
+                          nzStatus="finish"
+                          [nzDescription]="itemDetail.createdDate | date: 'dd/MM/yyyy HH:mm:ss'"
+                        ></nz-step>
+                        <ng-template #iconCreate>
+                          <img src="../../../../assets/img/invoice.svg" width="32" height="32" alt="" />
+                        </ng-template>
+
+                        <nz-step
+                          *ngIf="itemDetail.phuongThucThanhToan === 2"
+                          nzTitle="Đơn hàng đã thanh toán({{ itemDetail.grandTotal | currency: 'VND' }})"
+                          [nzIcon]="iconPayment"
+                          nzStatus="finish"
+                          [nzDescription]="itemDetail.createdDate | date: 'dd/MM/yyyy HH:mm:ss'"
+                        >
+                        </nz-step>
+                        <ng-template #iconPayment>
+                          <img src="../../../../assets/img/mobile-payment.svg" width="32" height="32" alt="" />
+                        </ng-template>
+
+                        <nz-step
+                          [nzTitle]="itemDetail.status > 0 ? 'Đã xác nhận' : 'Chờ xác nhận'"
+                          [nzIcon]="icon0"
+                          [nzStatus]="itemDetail.status > 0 ? 'finish' : 'wait'"
+                          [nzDescription]="itemDetail.status > 0 ? (itemDetail.confirmedDate | date: 'dd/MM/yyyy HH:mm:ss') : ''"
+                        >
+                        </nz-step>
+                        <ng-template #icon0>
+                          <img src="../../../../assets/img/time-left.svg" width="32" height="32" alt="" />
+                        </ng-template>
+
+                        <nz-step
+                          [nzTitle]="itemDetail.status >= 2 ? 'Đã lấy hàng' : 'Chờ lấy hàng'"
+                          [nzIcon]="icon1"
+                          [nzStatus]="itemDetail.status >= 2 ? 'finish' : 'wait'"
+                          [nzDescription]="itemDetail.status >= 2 ? (itemDetail.deliverDate | date: 'dd/MM/yyyy HH:mm:ss') : ''"
+                        >
+                        </nz-step>
+                        <ng-template #icon1>
+                          <img src="../../../../assets/img/package.svg" width="32" height="32" alt="" />
+                        </ng-template>
+
+                        <nz-step
+                          nzTitle="Đang giao hàng"
+                          [nzIcon]="icon2"
+                          [nzStatus]="itemDetail.status === 3 ? 'finish' : 'wait'"
+                        ></nz-step>
+                        <ng-template #icon2>
+                          <img src="../../../../assets/img/delivery-truck.svg" width="32" height="32" alt="" />
+                        </ng-template>
+
+                        <nz-step
+                          nzTitle="Đã giao hàng"
+                          [nzIcon]="icon3"
+                          [nzStatus]="itemDetail.status === 3 ? 'finish' : 'wait'"
+                          [nzDescription]="itemDetail.status === 3 ? (itemDetail.recivedDate | date: 'dd/MM/yyyy HH:mm:ss') : ''"
+                        >
+                        </nz-step>
+                        <ng-template #icon3>
+                          <img src="../../../../assets/img/inbox.svg" width="32" height="32" alt="" />
+                        </ng-template>
+                      </nz-steps>
+
+                      <nz-steps *ngIf="itemDetail.status === -1" nzLabelPlacement="vertical" [nzCurrent]="1">
+                        <nz-step
+                          nzTitle="Đơn hàng đã đặt"
+                          [nzIcon]="icon1"
+                          nzStatus="finish"
+                          [nzDescription]="itemDetail.createdDate | date: 'dd/MM/yyyy HH:mm:ss'"
+                        ></nz-step>
+                        <ng-template #icon1>
+                          <img src="../../../../assets/img/invoice.svg" width="32" height="32" alt="" />
+                        </ng-template>
+                        <nz-step
+                          nzTitle="Đơn hàng đã hủy"
+                          [nzIcon]="icon2"
+                          nzStatus="finish"
+                          [nzDescription]="itemDetail.canceledDate | date: 'dd/MM/yyyy HH:mm:ss'"
+                        ></nz-step>
+                        <ng-template #icon2>
+                          <img src="../../../../assets/img/cancel.svg" width="32" height="32" alt="" />
+                        </ng-template>
+                      </nz-steps>
+                      <div class="border"></div>
+                      <div>
+                        <h2>Địa chỉ nhận hàng</h2>
+                        <h4>{{ itemDetail.name }}</h4>
+                        <h4>{{ itemDetail.phoneNumber }}</h4>
+                        <h4>{{ itemDetail.addressDetail }}</h4>
+                        <h4>{{ itemDetail.commune }}</h4>
+                        <h4>{{ itemDetail.district }}</h4>
+                        <h4>{{ itemDetail.city }}</h4>
+                      </div>
+                      <div class="border"></div>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div *ngFor="let prod of itemDetail.listProducts" class="row" style="border-bottom: 1px solid #eaeaea">
+                            <div class="col-md-2">
+                              <img [src]="baseFile + prod.pictures[0]" width="100" height="100" alt="Product Image" />
+                            </div>
+                            <div class="col-md-8">
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <p (click)="viewProdDetail(prod.code)" style="font-weight: bold; cursor: pointer">{{ prod.name }}</p>
+                                </div>
+                                <div class="col-md-12">
+                                  <p class="text-muted font-weight-normal font-italic d-block">
+                                    Loại sản phẩm:
+                                    <span>{{ prod.categoryString }}</span>
+                                  </p>
+                                </div>
+                                <div class="col-md-12">
+                                  <p style="font-weight: bold">x{{ prod.count }}</p>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-2 item-center flex-block">
+                              <h5 class="price-out">{{ prod.price | currency: 'VND' }}</h5>
+                              <h5>{{ prod.price - prod.discount | currency: 'VND' }}</h5>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-12 pull-right">
+                              <ul class="list-unstyled mb-4">
+                                <li class="d-flex justify-content-between py-3 border-bottom">
+                                  <strong class="text-muted">Giá tạm tính </strong
+                                  ><strong>{{ itemDetail.total | currency: 'VND' | lowercase }}</strong>
+                                </li>
+                                <li class="d-flex justify-content-between py-3 border-bottom">
+                                  <strong class="text-muted">Phí vận chuyển</strong
+                                  ><strong>{{ '+' + itemDetail.shipping | currency: 'VND' | lowercase }}</strong>
+                                </li>
+                                <li class="d-flex justify-content-between py-3 border-bottom">
+                                  <strong class="text-muted">Mã giảm giá</strong
+                                  ><strong>{{ '-' + itemDetail.discount | currency: 'VND' | lowercase }}</strong>
+                                </li>
+                                <li class="d-flex justify-content-between py-3 border-bottom">
+                                  <strong class="text-muted">Tổng cộng</strong>
+                                  <strong>{{
+                                    itemDetail.shipping + itemDetail.total - itemDetail.discount | currency: 'VND' | lowercase
+                                  }}</strong>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </nz-card>
+                    <nz-card style="width: 100%">
+                      <div class="row">
+                        <div class="col-md-12 pull-right">
+                          <img class="img-price" src="../../../../assets/img/price.png" alt="" />
+                          Phương thức thanh toán:
+                          <span style="font-size: 20px" class="text-red">{{
+                            itemDetail.phuongThucThanhToan === 1
+                              ? 'Thanh
+                            toán khi nhận
+                            hàng'
+                              : 'Thanh toán qua ví điện tử'
+                          }}</span>
+                        </div>
+                      </div>
+                    </nz-card>
+                  </div>
+                </nz-card>
+              </nz-tab>
+              <nz-tab [nzTitle]="voucherTitle">
+                <ng-template #voucherTitle>
+                  <img height="16" width="16" src="../../../../assets/img/coupon.png" alt="" />
+                  Ví Voucher
+                </ng-template>
+
+                <nz-card [nzTitle]="voucherTemplate">
+                  <ng-template #voucherTemplate>
+                    <h3><b>Ví Voucher</b></h3>
+                    <p>Sử dụng mã của bạn để mua sản phẩm với giá ưu đãi nhất.</p>
+                  </ng-template>
+                  <div class="row">
+                    <div class="col-md-12 offset-md-">
+                      <nz-card nzTitle="Danh sách voucher">
+                        <nz-pagination
+                          style="float: right"
+                          [(nzPageIndex)]="pageIndexVoucher"
+                          [nzItemRender]="renderItemTemplate"
+                          [(nzPageSize)]="pageSizeVoucher"
+                          [nzTotal]="totalCount"
+                        >
+                        </nz-pagination>
+                        <ng-template #renderItemTemplate let-type let-page="page">
+                          <ng-container [ngSwitch]="type">
+                            <a *ngSwitchCase="'page'">{{ page }}</a>
+                            <a *ngSwitchCase="'prev'">Trang trước</a>
+                            <a *ngSwitchCase="'next'">Trang sau</a>
+                            <a *ngSwitchCase="'prev_5'"> {{ '<<' }} </a>
+                            <a *ngSwitchCase="'next_5'"> {{ '>>' }} </a>
+                          </ng-container>
+                        </ng-template>
+                      </nz-card>
+
+                      <nz-card>
+                        <div class="">
+                          <div class="row">
+                            <div
+                              *ngFor="
+                                let item of listVoucherByUser
+                                  | slice
+                                    : (pageIndexVoucher - 1) * pageSizeVoucher
+                                    : (pageIndexVoucher - 1) * pageSizeVoucher + pageSizeVoucher
+                              "
+                              class="col-md-6"
+                            >
+                              <article class="card fl-left">
+                                <section class="date">
+                                  <time datetime="23th feb">
+                                    <span>{{ item.discountView }}</span
+                                    ><span>{{ item.typeName }}</span>
+                                  </time>
+                                </section>
+                                <section class="card-cont">
+                                  <h3>Mã giảm giá {{ item.discountView + item.typeName }}</h3>
+                                  <div class="even-date">
+                                    <i class="fa fa-calendar"></i>
+                                    <time>
+                                      Có hiệu lực từ:
+                                      <span> {{ item.timeValid }}</span>
+                                      <!-- <span>08:55pm to 12:00 am</span> -->
+                                    </time>
+                                  </div>
+                                  <!-- <nz-progress [nzStatus]="success" [nzStrokeColor]="'red'" [nzPercent]="item.percent">
+                                  </nz-progress> -->
+                                  <button
+                                    [disabled]="item.isSelected === 2"
+                                    nz-button
+                                    class="selected"
+                                    (click)="getVoucher(item)"
+                                    nzType="primary"
+                                  >
+                                    {{ item.isSelected === 2 ? 'Đã hết hạn' : 'Mua
+                                    ngay' }}
+                                  </button>
+                                </section>
+                              </article>
+                            </div>
+                          </div>
+                          <div class="null-item">
+                            <div class="row">
+                              <div *ngIf="totalCount === 0" style="height: 400px" class="col-md-12 item-center">
+                                <img style="width: 6.25rem; height: 6.25rem" src="../../../../assets/img/null.png" alt="Null Order" />
+                                <br />
+                                <p>
+                                  Chưa có mã giảm giá
+                                  <a href="javascript:void(0)" [routerLink]="'/voucher'">Lấy ngay</a>
+                                </p>
+                                <br />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </nz-card>
+
+                      <nz-card>
+                        <nz-pagination
+                          style="float: right"
+                          [(nzPageIndex)]="pageIndexVoucher"
+                          [nzItemRender]="renderItemTemplate"
+                          [(nzPageSize)]="pageSizeVoucher"
+                          [nzTotal]="totalCount"
+                        >
+                        </nz-pagination>
+                        <ng-template #renderItemTemplate let-type let-page="page">
+                          <ng-container [ngSwitch]="type">
+                            <a *ngSwitchCase="'page'">{{ page }}</a>
+                            <a *ngSwitchCase="'prev'">Trang trước</a>
+                            <a *ngSwitchCase="'next'">Trang sau</a>
+                            <a *ngSwitchCase="'prev_5'"> {{ '<<' }} </a>
+                            <a *ngSwitchCase="'next_5'"> {{ '>>' }} </a>
+                          </ng-container>
+                        </ng-template>
+                      </nz-card>
+                    </div>
+                  </div>
+                </nz-card>
+              </nz-tab>
+              <nz-tab [nzTitle]="changePwTemplate">
+                <ng-template #changePwTemplate>
+                  <img height="16" width="16" src="../../../../assets/img/Graphicloads-100-Flat-Pencil.ico" alt="" />
+                  Đổi Mật Khẩu
+                </ng-template>
+
+                <nz-card [nzTitle]="changePassTemplate">
+                  <ng-template #changePassTemplate>
+                    <h3><b>Đổi mật khẩu</b></h3>
+                    <p>Để bảo mật tài khoản, vui lòng không chia sẻ mật khẩu cho người khác</p>
+                  </ng-template>
+                  <div nz-row nzGutter="8">
+                    <div nz-col nzSpan="12" nzOffset="6">
+                      <form nz-form [formGroup]="formChangePassword" (ngSubmit)="save()">
+                        <nz-form-item>
+                          <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired nzFor="oldPassword">Mật khẩu cũ </nz-form-label>
+                          <nz-form-control [nzSm]="16" [nzXs]="24" nzHasFeedback [nzErrorTip]="validateOldPassword">
+                            <nz-input-group [nzSuffix]="oldPasswordSubfix">
+                              <input
+                                formControlName="oldPassword"
+                                id="oldPassword"
+                                [type]="passwordVisible ? 'text' : 'password'"
+                                nz-input
+                                placeholder="Nhập mật khẩu cũ"
+                              />
+                            </nz-input-group>
+                            <ng-template #oldPasswordSubfix>
+                              <i
+                                nz-icon
+                                [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+                                (click)="passwordVisible = !passwordVisible"
+                              ></i>
+                            </ng-template>
+                            <ng-template #validateOldPassword let-control>
+                              <ng-container *ngIf="control.hasError('minlength')"> Tối thiểu 6 ký tự.</ng-container>
+                              <ng-container *ngIf="control.hasError('required')"> Trường thông tin bắt buộc. </ng-container>
+                              <ng-container *ngIf="control.hasError('invalidPw')"> Mật khẩu cũ không chính xác. </ng-container>
+                            </ng-template>
+                          </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-item>
+                          <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired nzFor="newPassword">Mật khẩu mới </nz-form-label>
+                          <nz-form-control [nzSm]="16" [nzXs]="24" nzHasFeedback [nzErrorTip]="validateNewPassword">
+                            <nz-input-group [nzSuffix]="newPasswordSubfix">
+                              <input
+                                formControlName="newPassword"
+                                id="newPassword"
+                                [type]="newPasswordVisible ? 'text' : 'password'"
+                                nz-input
+                                placeholder="Nhập mật khẩu mới"
+                              />
+                            </nz-input-group>
+                            <ng-template #newPasswordSubfix>
+                              <i
+                                nz-icon
+                                [nzType]="newPasswordVisible ? 'eye-invisible' : 'eye'"
+                                (click)="newPasswordVisible = !newPasswordVisible"
+                              ></i>
+                            </ng-template>
+                            <ng-template #validateNewPassword let-control>
+                              <ng-container *ngIf="control.hasError('minlength')"> Tối thiểu 6 ký tự.</ng-container>
+                              <ng-container *ngIf="control.hasError('required')"> Trường thông tin bắt buộc. </ng-container>
+                            </ng-template>
+                          </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-item>
+                          <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired nzFor="confirmPassword">Xác nhận mật khẩu </nz-form-label>
+                          <nz-form-control [nzSm]="16" [nzXs]="24" nzHasFeedback [nzErrorTip]="validateConfirmPassword">
+                            <nz-input-group [nzSuffix]="confirmPasswordSubfix">
+                              <input
+                                (ngModelChange)="checkConfirmPassword()"
+                                formControlName="confirmPassword"
+                                id="oldPassword"
+                                [type]="confirmPasswordVisible ? 'text' : 'password'"
+                                nz-input
+                                placeholder="Nhập mật khẩu xác nhận"
+                              />
+                            </nz-input-group>
+                            <ng-template #confirmPasswordSubfix>
+                              <i
+                                nz-icon
+                                [nzType]="confirmPasswordVisible ? 'eye-invisible' : 'eye'"
+                                (click)="confirmPasswordVisible = !confirmPasswordVisible"
+                              ></i>
+                            </ng-template>
+                            <ng-template #validateConfirmPassword let-control>
+                              <ng-container *ngIf="control.hasError('minlength')"> Tối thiểu 6 ký tự.</ng-container>
+                              <ng-container *ngIf="control.hasError('required')"> Trường thông tin bắt buộc. </ng-container>
+                              <ng-container *ngIf="control.hasError('invalidConfirmPw')"> Xác nhận mật khẩu không hợp lệ.</ng-container>
+                            </ng-template>
+                          </nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item>
+                          <nz-form-control [nzSm]="12" nzOffset="6" [nzXs]="24">
+                            <button nz-button nzType="primary" (click)="save()" class="btn-primary">
+                              <i nz-icon nzType="save" nzTheme="fill"></i>Đổi mật khẩu
+                            </button>
+                          </nz-form-control>
+                        </nz-form-item>
+                      </form>
+                    </div>
+                  </div>
+                </nz-card>
+              </nz-tab>
+            </nz-tabset>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

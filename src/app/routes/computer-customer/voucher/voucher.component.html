@@ -1,0 +1,110 @@
+<!-- product category -->
+<section id="aa-product-details">
+  <div class="row">
+    <div style="margin-top: 20px" class="col-md-10 offset-md-1">
+      <ul class="breadcrumb">
+        <li><a href="javascript:void(0)" [routerLink]="'/home'">Trang chủ</a></li>
+        <li>Danh sách voucher</li>
+      </ul>
+    </div>
+    <div class="col-md-10 offset-md-1">
+      <nz-card nzTitle="Danh sách voucher">
+        <nz-pagination
+          style="float: right"
+          [nzItemRender]="renderItemTemplate"
+          [nzShowTotal]="rangeTemplate"
+          [(nzPageIndex)]="pageIndex"
+          [nzItemRender]="renderItemTemplate"
+          (nzPageIndexChange)="changeIndex()"
+          [(nzPageSize)]="pageSize"
+          [nzTotal]="totalCount"
+        >
+        </nz-pagination>
+        <ng-template #renderItemTemplate let-type let-page="page">
+          <ng-container [ngSwitch]="type">
+            <a *ngSwitchCase="'page'">{{ page }}</a>
+            <a *ngSwitchCase="'prev'">Trang trước</a>
+            <a *ngSwitchCase="'next'">Trang sau</a>
+            <a *ngSwitchCase="'prev_5'"> {{ '<<' }} </a>
+            <a *ngSwitchCase="'next_5'"> {{ '>>' }} </a>
+          </ng-container>
+        </ng-template>
+        <ng-template #rangeTemplate let-range="range" let-total>
+          {{ range[0] }}-{{ range[1] }} trên tổng số {{ total }} sản phẩm
+        </ng-template>
+      </nz-card>
+
+      <nz-card>
+        <div class="">
+          <div class="row">
+            <div *ngFor="let item of listVoucher" class="col-md-4">
+              <article class="card fl-left">
+                <section class="date">
+                  <time datetime="23th feb">
+                    <span>{{ item.discountView }}</span
+                    ><span>{{ item.typeName }}</span>
+                  </time>
+                </section>
+                <section class="card-cont">
+                  <h3>Mã giảm giá {{ item.discountView + item.typeName }}</h3>
+                  <div class="even-date">
+                    <i class="fa fa-calendar"></i>
+                    <time>
+                      Có hiệu lực từ:
+                      <span> {{ item.timeValid }}</span>
+                      <!-- <span>08:55pm to 12:00 am</span> -->
+                    </time>
+                  </div>
+                  <nz-progress [nzStatus]="success" [nzStrokeColor]="'red'" [nzPercent]="item.percent"> </nz-progress>
+                  <button
+                    [disabled]="item.isSelected === 1 || item.isSelected === 2"
+                    nz-button
+                    class="selected"
+                    (click)="getVoucher(item)"
+                    nzType="primary"
+                  >
+                    {{
+                      item.isSelected === 1
+                        ? 'Đã lấy'
+                        : item.isSelected === 2
+                        ? 'Đã hết mã'
+                        : 'Lấy
+                                        mã'
+                    }}
+                  </button>
+                </section>
+              </article>
+            </div>
+          </div>
+        </div>
+      </nz-card>
+
+      <nz-card>
+        <nz-pagination
+          style="float: right"
+          [nzItemRender]="renderItemTemplate"
+          [nzShowTotal]="rangeTemplate"
+          [(nzPageIndex)]="pageIndex"
+          [nzItemRender]="renderItemTemplate"
+          (nzPageIndexChange)="changeIndex()"
+          [(nzPageSize)]="pageSize"
+          [nzTotal]="totalCount"
+        >
+        </nz-pagination>
+        <ng-template #renderItemTemplate let-type let-page="page">
+          <ng-container [ngSwitch]="type">
+            <a *ngSwitchCase="'page'">{{ page }}</a>
+            <a *ngSwitchCase="'prev'">Trang trước</a>
+            <a *ngSwitchCase="'next'">Trang sau</a>
+            <a *ngSwitchCase="'prev_5'"> {{ '<<' }} </a>
+            <a *ngSwitchCase="'next_5'"> {{ '>>' }} </a>
+          </ng-container>
+        </ng-template>
+        <ng-template #rangeTemplate let-range="range" let-total>
+          {{ range[0] }}-{{ range[1] }} trên tổng số {{ total }} sản phẩm
+        </ng-template>
+      </nz-card>
+    </div>
+  </div>
+</section>
+<!-- / product category -->

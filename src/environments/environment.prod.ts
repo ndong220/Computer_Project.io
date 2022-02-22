@@ -1,0 +1,23 @@
+export const environment = {
+  SERVER_URL: `./`,
+  BASE_API_URL: 'http://localhost:8310/',
+  BASE_UPLOAD_URL: 'https://localhost:44375/api/server-upload/upload',
+  BASE_FILE_URL: 'http://localhost:8003/Resources/Images/',
+  ClientPayPalId: 'AfprWRRqkGWWLp-rI7rqducrD0aZ0Cy6Y_WnHTTI824vpjnrtijcGUM4qSRidTVZZdIIHg6uhI8coHur',
+  API_RATE_MONEY_KEY: '3479f9b5af3d82af0e54',
+  API_RATE_MONEY: 'https://free.currconv.com/',
+  ALLOW_ANONYMOUS: '?_allow_anonymous=true',
+  production: true,
+  useHash: false,
+  hmr: false,
+  pro: {
+    theme: 'light',
+    menu: 'side',
+    contentWidth: 'fluid',
+    fixedHeader: true,
+    autoHideHeader: true,
+    fixSiderbar: true,
+    onlyIcon: false,
+    colorWeak: false,
+  },
+};

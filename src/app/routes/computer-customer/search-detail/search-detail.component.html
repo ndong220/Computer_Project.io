@@ -1,0 +1,366 @@
+<div nz-row nzGutter="8">
+  <div style="margin-top: 20px" nz-col nzOffset="1" nzSpan="22">
+    <ul class="breadcrumb">
+      <li><a href="javascript:void(0)" [routerLink]="'/home'">Trang chủ</a></li>
+      <li>Tìm kiếm sản phẩm</li>
+      <li>{{ textFilter }}</li>
+    </ul>
+  </div>
+  <div nz-col nzSpan="4" nzOffset="1">
+    <nz-card>
+      <div style="font-weight: bold; text-align: center">LỌC SẢN PHẨM</div>
+    </nz-card>
+    <nz-card [nzBordered]="true" nzTitle="KHOẢNG GIÁ">
+      <nz-radio-group (ngModelChange)="changeRange($event)" [(ngModel)]="listRange">
+        <label nz-radio [nzValue]="[null, null]">Tất cả</label>
+        <label nz-radio [nzValue]="[0, 999999]">Dưới 1 triệu</label>
+        <label nz-radio [nzValue]="[1000000, 4000000]">1 triệu - 4 triệu</label>
+        <label nz-radio [nzValue]="[4000000, 10000000]">4 triệu - 10 triệu</label>
+        <label nz-radio [nzValue]="[10000000, 20000000]">10 triệu - 20 triệu</label>
+        <label nz-radio [nzValue]="[20000000, maxDefault]">Trên 20 triệu</label>
+      </nz-radio-group>
+      <nz-slider nzRange [nzMin]="min" (ngModelChange)="changeSlider($event)" [nzMax]="max" [ngModel]="range"> </nz-slider>
+      <nz-form-item nzFlex>
+        <nz-form-label nzFor="" nzSpan="8">Từ</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <nz-input-number
+            [nzFormatter]="formatterDollar"
+            (ngModelChange)="changeMin($event)"
+            style="width: 100%"
+            [nzMin]="min"
+            [nzMax]="max"
+            [(ngModel)]="listRangeChange[0]"
+            [nzFormatter]=""
+          >
+          </nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item nzFlex>
+        <nz-form-label nzFor="" nzSpan="8">Đến</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <nz-input-number
+            [nzFormatter]="formatterDollar"
+            (ngModelChange)="changeMax($event)"
+            style="width: 100%"
+            [nzMin]="min"
+            [nzMax]="max"
+            [(ngModel)]="listRangeChange[1]"
+            [nzStep]="1"
+          >
+          </nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item nzFlex>
+        <nz-form-control nzSpan="24">
+          <button style="width: 100%" nz-button (click)="filterHandler(0)" type="button" nzType="primary">Lọc</button>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-card>
+    <nz-card [nzBordered]="true" nzTitle="TÌM THEO HÃNG">
+      <div style="margin-bottom: 10px" *ngFor="let item of listSupplier" style="cursor: pointer" (click)="filterBySupplier(item)">
+        <i nz-icon nzType="right" nzTheme="outline"></i> {{ item.name }}
+      </div>
+    </nz-card>
+    <nz-card [nzBordered]="true" nzTitle="LOẠI SẢN PHẨM">
+      <nz-tree [nzData]="nodes" nzShowIcon [nzExpandedIcon]="multiExpandedIconTpl" nzShowLine (nzClick)="treeViewClick($event)"> </nz-tree>
+      <ng-template #multiExpandedIconTpl let-node let-origin="origin">
+        <i *ngIf="!origin.isLeaf" nz-icon [nzType]="node.isExpanded ? 'minus' : 'plus'" class="ant-tree-switcher-line-icon"></i>
+        <i *ngIf="origin.isLeaf" nz-icon nzType="right" nzTheme="outline"></i>
+      </ng-template>
+    </nz-card>
+  </div>
+  <div nz-col nzSpan="18">
+    <nz-card [nzBordered]="true">
+      <div nz-row>
+        <div nz-col nzSpan="12">
+          <form [formGroup]="form" action="">
+            <nz-form-item nzFlex>
+              <nz-form-label nzFor="" nzSpan="5">Sắp xếp theo</nz-form-label>
+              <nz-form-control nzSpan="6">
+                <nz-select (ngModelChange)="filterHandler(1, $event)" formControlName="sortType">
+                  <nz-option *ngFor="let item of listSortType" [nzValue]="item.id" [nzLabel]="item.name"> </nz-option>
+                </nz-select>
+              </nz-form-control>
+
+              <nz-form-label nzFor="" nzOffset="1" nzSpan="7">Số sản phẩm/ Trang</nz-form-label>
+              <nz-form-control nzSpan="5">
+                <nz-select formControlName="pageSize" (ngModelChange)="changePageSize($event)">
+                  <nz-option *ngFor="let item of listPageSizeDf" [nzValue]="item" [nzLabel]="item"> </nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </form>
+        </div>
+        <div nz-col nzSpan="12">
+          <nz-pagination
+            style="float: right"
+            [nzItemRender]="renderItemTemplate"
+            [nzShowTotal]="rangeTemplate"
+            [(nzPageIndex)]="pageIndex"
+            [nzItemRender]="renderItemTemplate"
+            (nzPageIndexChange)="changeIndex()"
+            [(nzPageSize)]="pageSize"
+            [nzTotal]="totalCount"
+          >
+          </nz-pagination>
+          <ng-template #renderItemTemplate let-type let-page="page">
+            <ng-container [ngSwitch]="type">
+              <a *ngSwitchCase="'page'">{{ page }}</a>
+              <a *ngSwitchCase="'prev'">Trang trước</a>
+              <a *ngSwitchCase="'next'">Trang sau</a>
+              <a *ngSwitchCase="'prev_5'"> {{ '<<' }} </a>
+              <a *ngSwitchCase="'next_5'"> {{ '>>' }} </a>
+            </ng-container>
+          </ng-template>
+          <ng-template #rangeTemplate let-range="range" let-total>
+            {{ range[0] }}-{{ range[1] }} trên tổng số {{ total }} sản phẩm
+          </ng-template>
+        </div>
+      </div>
+    </nz-card>
+
+    <nz-card [nzBordered]="true">
+      <nz-empty
+        *ngIf="listProd.length === 0"
+        nzNotFoundImage="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+        [nzNotFoundContent]="contentTpl"
+      >
+        <ng-template #contentTpl>
+          <span> Không có kết quả </span>
+        </ng-template>
+      </nz-empty>
+      <div nz-row>
+        <div nz-col nzSpan="24">
+          <div nz-row nzGutter="16">
+            <div *ngFor="let item of listProd" nz-col nzSpan="6">
+              <div class="product-grid4">
+                <div class="product-image4">
+                  <a href="javascript:void(0)" (click)="viewDetail(item.code)">
+                    <img class="pic-1" [src]="baseFile + item.pictures[0]" />
+                    <img class="pic-2" [src]="baseFile + (item.pictures.length > 1 ? item.pictures[1] : item.pictures[0])" />
+                  </a>
+                  <ul class="social">
+                    <li (click)="updateVisitCount(item.code, item)">
+                      <a href="javascript:void(0)" data-tip="Xem nhanh"><i class="fa fa-eye"></i></a>
+                    </li>
+                    <li>
+                      <a href="#" data-tip="Yêu thích"><i class="fas fa-shopping-bag"></i></a>
+                    </li>
+                    <li (click)="addToCart(item)">
+                      <a href="javascript:void(0)" data-tip="Thêm vào giỏ hàng"><i class="fa fa-shopping-cart"></i></a>
+                    </li>
+                  </ul>
+                  <span class="product-new-label">New</span>
+                  <span class="product-discount-label" *ngIf="item.discount !== 0"
+                    >-{{ (item.discount / item.price) * 100 | number: '1.0-0' }}%</span
+                  >
+                </div>
+                <div (click)="viewDetail(item.code)" class="product-content">
+                  <h3 class="title" class="name-text" title="{{ item.name }}">
+                    <a href="javascript:void(0)">{{ item.name }}</a>
+                  </h3>
+                  <h5 style="color: skyblue">Lượt xem: {{ item.visitCount }}</h5>
+                  <nz-rate [ngModel]="item.rating" nzDisabled></nz-rate>
+                  <div class="price">
+                    {{ item.price - item.discount | currency: 'VND' | lowercase }}
+                    <span *ngIf="item.discount > 0">{{ item.price | currency: 'VND' | lowercase }}</span>
+                  </div>
+                  <!-- <a class="add-to-cart" href="">THÊM VÀO GIỎ HÀNG</a> -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nz-card>
+
+    <nz-card [nzBordered]="true">
+      <div nz-row>
+        <div nz-col nzSpan="12"></div>
+        <div nz-col nzSpan="12">
+          <nz-pagination
+            style="float: right"
+            [nzItemRender]="renderItemTemplate"
+            [(nzPageIndex)]="pageIndex"
+            (nzPageIndexChange)="changeIndex()"
+            [nzShowTotal]="rangeTemplate"
+            [(nzPageSize)]="pageSize"
+            [nzTotal]="totalCount"
+          >
+          </nz-pagination>
+          <ng-template #renderItemTemplate let-type let-page="page">
+            <ng-container [ngSwitch]="type">
+              <a *ngSwitchCase="'page'">{{ page }}</a>
+              <a *ngSwitchCase="'prev'">Trang trước</a>
+              <a *ngSwitchCase="'next'">Trang sau</a>
+              <a *ngSwitchCase="'prev_5'"> {{ '<<' }} </a>
+              <a *ngSwitchCase="'next_5'"> {{ '>>' }} </a>
+            </ng-container>
+          </ng-template>
+          <ng-template #rangeTemplate let-range="range" let-total>
+            {{ range[0] }}-{{ range[1] }} trên tổng số {{ total }} sản phẩm
+          </ng-template>
+        </div>
+      </div>
+    </nz-card>
+  </div>
+</div>
+
+<nz-modal
+  [nzAutofocus]="null"
+  [(nzVisible)]="isVisible"
+  [nzAutofocus]="null"
+  [nzAutofocus]="null"
+  nzTitle="Thông tin sản phẩm {{ itemQuickView ? itemQuickView.code : '' }}"
+  nzWidth="1300px"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-container *nzModalContent>
+    <div class="row">
+      <!-- Modal view slider -->
+      <div class="col-md-6 col-sm-12 col-xs-12">
+        <lib-ngx-image-zoom
+          [thumbImage]="myThumbnail"
+          [fullImage]="myThumbnail"
+          [magnification]="2"
+          [enableScrollZoom]="true"
+          [enableLens]="true"
+          [lensWidth]="'200'"
+          [lensHeight]="'200'"
+          [circularLens]="true"
+        >
+        </lib-ngx-image-zoom>
+        <div class="row">
+          <div class="col-md-9"></div>
+          <div class="col-md-3">
+            <!-- Controls -->
+            <div class="controls pull-right">
+              <a class="left fa fa-chevron-left btn btn-success" href="#list-picture" data-slide="prev"></a>
+              <a class="right fa fa-chevron-right btn btn-success" href="#list-picture" data-slide="next"></a>
+            </div>
+          </div>
+        </div>
+        <div id="list-picture" class="carousel slide hidden-xs" data-ride="carousel">
+          <!-- Wrapper for slides -->
+          <div class="carousel-inner">
+            <div class="item active">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="row">
+                    <div
+                      (click)="changePicture(item)"
+                      *ngFor="let item of itemQuickView ? itemQuickView.listPicturesActive : []"
+                      class="col-md-3 img-quick-view col-sm-6"
+                    >
+                      <img class="pic-prod" src="{{ baseFile + item }}" alt="" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div *ngFor="let pic of itemQuickView ? itemQuickView.listPicturesRs : []" class="item">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="row">
+                    <div (click)="changePicture(item)" *ngFor="let item of pic" class="col-md-3 img-quick-view col-sm-6">
+                      <img class="pic-prod" src="{{ baseFile + item }}" alt="" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal view content -->
+      <div class="col-md-6 col-sm-12 col-xs-12">
+        <div class="aa-product-view-content">
+          <h3>{{ itemQuickView ? itemQuickView.name : '' }}</h3>
+          <div class="row">
+            <div class="col-md-6">
+              <p style="float: left">
+                Lượt xem:
+                <nz-tag [nzColor]="'#108ee9'">{{ itemQuickView ? itemQuickView.visitCount : '' }} </nz-tag>
+              </p>
+            </div>
+            <div class="col-md-6">
+              <p style="float: right" class="aa-product-avilability">Trạng thái: <nz-tag [nzColor]="'green'">Còn hàng </nz-tag></p>
+              <div
+                class="fb-like"
+                data-href="https://developers.facebook.com/docs/plugins/"
+                data-width=""
+                data-layout="standard"
+                data-action="like"
+                data-size="small"
+                data-share="true"
+              ></div>
+            </div>
+          </div>
+          <nz-rate [ngModel]="itemQuickView.rating" nzDisabled></nz-rate>
+          <br />
+          <span class="text-label">Giá bán: </span
+          ><span class="{{ itemQuickView.cssClass }}">{{ itemQuickView.price | currency: 'VND' | lowercase }}</span>
+          <br />
+          <div *ngIf="itemQuickView.isShow">
+            <span class="text-label">Giá khuyến mãi:</span>
+            <span class="text-price-discount"> {{ itemQuickView.price - itemQuickView.discount | currency: 'VND' | lowercase }}</span>
+          </div>
+          <br />
+          <span class="text-label">Thông tin sảm phẩm: </span>
+          <span>{{ itemQuickView ? itemQuickView.summary : '' }}</span>
+          <br />
+          <span class="text-label">Thời gian bảo hành: </span>
+          <span class="text-price-discount">{{
+            itemQuickView ? itemQuickView.thoiGianBaoHanh + ' ' + itemQuickView.loaiBaoHanh : ''
+          }}</span>
+          <br />
+          <br />
+          <div class="aa-prod-quantity">
+            <p class="aa-prod-category">
+              <span class="text-label">Loại sản phẩm: </span
+              ><a *ngFor="let item of itemQuickView ? itemQuickView.categoryName : []" href="#">
+                <nz-tag [nzColor]="'#f50'">{{ item }}</nz-tag>
+              </a>
+            </p>
+
+            <p class="aa-prod-category">
+              <span class="text-label">Tag: </span
+              ><a *ngFor="let item of itemQuickView ? itemQuickView.tagName : []" href="#">
+                <nz-tag [nzColor]="'lime'">{{ item }}</nz-tag>
+              </a>
+            </p>
+          </div>
+          <span class="text-label">Thông tin bổ sung: </span>
+          <div class="row">
+            <div class="col-md-12">
+              <nz-table [nzPageSize]="'4'" #basicTable [nzData]="itemQuickView ? itemQuickView.listCategoryMetaProducts : []">
+                <thead>
+                  <tr>
+                    <th>Mã</th>
+                    <th>Nội dung</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of itemQuickView ? itemQuickView.listCategoryMetaProducts : []">
+                    <td>{{ data.categoryMetaName }}</td>
+                    <td>{{ data.content }}</td>
+                  </tr>
+                </tbody>
+              </nz-table>
+            </div>
+          </div>
+          <div class="item-center aa-prod-view-bottom">
+            <a (click)="addToCart(itemQuickView)" href="javascript:void(0)" style="margin-right: 20px" class="aa-add-to-cart-btn"
+              ><span class="fa fa-shopping-cart"></span>Thêm vào giỏ hàng</a
+            >
+            <a href="javascript:void(0)" (click)="viewDetail(itemQuickView.code)" class="aa-add-to-cart-btn">Xem chi tiết</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <div *nzModalFooter>
+    <button nz-button (click)="handleCancel()" nzType="danger">Đóng</button>
+  </div>
+</nz-modal>

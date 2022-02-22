@@ -1,0 +1,360 @@
+// -------- import official less file -----------
+//@import "../node_modules/ng-zorro-antd/ng-zorro-antd.less";
+
+// -------- override less var -----------
+// @primary-color: #060818;
+
+// @menu-dark-color: #faf4f4;
+// @menu-dark-bg: #204051;
+
+// @aside-collapsed-prefix: ~'.aside-collapsed';
+// @alain-pro-zindex : @zindex-base;
+// @alain-pro-ease : cubic-bezier(0.25, 0, 0.15, 1);
+
+@alain-pro-header-height: 46px;
+@layout-header-height: 46px;
+// @alain-pro-header-bg : #fff;
+// @alain-pro-header-box-shadow : 0 1px 4px rgba(0, 21, 41, 0.08);
+// @alain-pro-header-color: rgba(256, 256, 256, 0.8);
+// @alain-pro-header-hover-color: #fff;
+// @alain-pro-header-hover-bg : rgba(0, 0, 0, 0.025);
+// @alain-pro-header-search-width : 210px;
+// @alain-pro-header-widgets-icon-fs : 16px;
+
+// @alain-pro-top-nav-only-icon-fs : 16px;
+
+// @alain-pro-light-color : #fff;
+// @alain-pro-light-slider-shadow : 2px 0 8px 0 rgba(29, 35, 41, 0.05);
+
+// @alain-pro-logo-font-size : 20px;
+// @alain-pro-logo-font-family : 'Myriad Pro',
+// 'Helvetica Neue',
+// Arial,
+// Helvetica,
+// sans-serif;
+
+// @alain-pro-content-margin : 24px;
+// @alain-pro-wide : 1200px;
+
+@alain-pro-sider-menu-width: 235px;
+@alain-pro-sider-menu-img-wh: 14px;
+
+/**
+ * 侧边栏固定时滚动条显示风格：
+ * - hide: 隐藏滚动条（默认）
+ * - show: 显示美化后滚动条
+ */
+// @alain-pro-sider-fixed-scroll-mode : 'hide';
+// @alain-pro-sider-scrollbar-width : 0;
+// @alain-pro-sider-scrollbar-height : 0;
+// @alain-pro-sider-scrollbar-track-color : transparent;
+// @alain-pro-sider-scrollbar-thumb-color : transparent;
+
+// @brand-bordered-color : rgba(24, 28, 33, 0.06);
+// @brand-scroll-width : 20px;
+
+@menu-collapsed-width: 60px;
+
+/* Hidden logo amchart */
+.chartdiv div:nth-child(2) svg:nth-child(1) g[aria-labelledby$='-title'] {
+  display: none;
+}
+
+.alain-pro__menu-item {
+  border-bottom: solid 1px #ccc7c74a;
+}
+
+.alain-pro__menu-title-text {
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.alain-pro__menu-icon {
+  font-size: 14px;
+}
+
+// .alain-pro__header {
+//   background-color: @primary-color;
+// }
+
+.page-header .ant-breadcrumb {
+  margin-bottom: 8px;
+}
+
+.alain-pro__page-header-content {
+  margin: 5px 16px 0;
+}
+
+.alain-pro__body {
+  margin: 16px 16px 0 !important;
+}
+
+.aside-collapsed .alain-pro__sider-logo h4 {
+  display: none;
+}
+
+.global-footer {
+  display: block;
+  margin: 20px 0 20px;
+  padding: 0 16px;
+  text-align: center;
+}
+
+.cs-pagination {
+  text-align: right;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:focus {
+  color: #fff;
+  background-color: #0062cc;
+  border-color: #005cbf;
+}
+
+.btn-secondary {
+  color: #fff;
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+
+.btn-secondary:hover,
+.btn-secondary:active,
+.btn-secondary:focus {
+  color: #fff;
+  background-color: #5a6268;
+  border-color: #545b62;
+}
+
+.btn-info {
+  color: #fff;
+  background-color: #17a2b8;
+  border-color: #17a2b8;
+}
+
+.btn-info:hover,
+.btn-info:active,
+.btn-info:focus {
+  color: #fff;
+  background-color: #138496;
+  border-color: #117a8b;
+}
+
+.btn-success {
+  color: #fff;
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.btn-success:hover,
+.btn-success:active,
+.btn-success:focus {
+  color: #fff;
+  background-color: #218838;
+  border-color: #1e7e34;
+}
+
+.btn-danger {
+  color: #fff;
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.btn-danger:hover,
+.btn-danger:active,
+.btn-danger:focus {
+  color: #fff;
+  background-color: #c82333;
+  border-color: #bd2130;
+}
+
+.btn-warning {
+  color: #212529;
+  background-color: #ffc107;
+  border-color: #ffc107;
+}
+
+.btn-warning:hover,
+.btn-warning:active,
+.btn-warning:focus {
+  color: #fff;
+  background-color: #e0a800;
+  border-color: #d39e00;
+}
+
+.btn-dark {
+  color: #fff;
+  background-color: #343a40;
+  border-color: #343a40;
+}
+
+.btn-dark:hover,
+.btn-dark:active,
+.btn-dark:focus {
+  color: #fff;
+  background-color: #23272b;
+  border-color: #1d2124;
+}
+
+.btn-light {
+  color: #212529;
+  background-color: #f8f9fa;
+  border-color: #f8f9fa;
+}
+
+.btn-light:hover,
+.btn-light:active,
+.btn-light:focus {
+  color: #fff;
+  background-color: #e2e6ea;
+  border-color: #dae0e5;
+}
+
+.btn-excel {
+  color: #fff;
+  background-color: #257746;
+  border-color: #257746;
+}
+
+.btn-excel:hover,
+.btn-excel:active,
+.btn-excel:focus {
+  color: #fff;
+  background-color: #195e34;
+  border-color: #195e34;
+}
+
+.btn-reload {
+  color: rgba(0, 0, 0, 0.65);
+  background-color: #fff;
+  border: 1px solid #d9d9d9;
+}
+
+.btn-reload:hover,
+.btn-reload:focus {
+  color: #40a9ff;
+  background-color: #fff;
+  border-color: #40a9ff;
+}
+
+.btn-reload:active {
+  color: #096dd9;
+  background-color: #fff;
+  border-color: #096dd9;
+}
+
+nz-select {
+  width: 100%;
+}
+
+.margin-0 {
+  margin: 0;
+}
+
+.pull-right {
+  text-align: right;
+}
+
+.padding-bottom-10 {
+  padding-bottom: 10px;
+}
+
+.padding-left-10 {
+  padding-left: 10px;
+}
+
+.ant-modal-header {
+  background: #3b6978;
+}
+
+.ant-input-disabled {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.ant-input[disabled] {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.ant-modal-title {
+  color: #fff;
+}
+
+.ant-modal-close {
+  color: #fff;
+}
+
+.ant-modal-close:focus,
+.ant-modal-close:hover {
+  color: #fff;
+}
+
+.ag-watermark {
+  display: none !important;
+}
+
+.chart-wrapper {
+  height: 350px;
+}
+
+@font-family: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+  'Segoe UI Symbol', 'Noto Color Emoji';
+
+@card-padding-base: 12px;
+
+@margin-md: 10px;
+
+.page-header {
+  padding-top: 10px;
+}
+
+.page-header__title {
+  margin-bottom: 5px;
+}
+
+.ant-form-item-label > label {
+  font-weight: 500;
+}
+
+.ant-tag {
+  border-radius: 15px;
+}
+
+.ant-switch-checked {
+  background-color: #0b0;
+}
+
+.ant-form-item-label {
+  text-align: left;
+}
+
+.ant-form-item-label > label.ant-form-item-required::before {
+  display: none;
+  margin-right: 4px;
+  color: #ff4d4f;
+  font-size: 14px;
+  font-family: SimSun, sans-serif;
+  line-height: 1;
+  content: '';
+}
+
+.ant-form-item-label > label::after {
+  position: relative;
+  top: -0.5px;
+  margin: 0 8px 0 2px;
+  content: ':';
+}
+
+.ant-form-item-label > label.ant-form-item-required::after {
+  position: relative;
+  top: -0.5px;
+  display: inline-block;
+  margin: 0 8px 0 2px;
+  color: #ff4d4f;
+  content: '(*):';
+}

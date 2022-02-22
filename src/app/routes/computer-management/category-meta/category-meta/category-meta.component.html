@@ -1,0 +1,159 @@
+<page-header-wrapper [title]="tittle" onBack="{() => window.history.back()}">
+  <nz-card [nzBordered]="false">
+    <nz-row>
+      <nz-col nzSm="16" nzXS="24" nzMd="16" class="padding-bottom-10">
+        <button
+          nz-button
+          nzType="default"
+          (click)="btnReload.click($event)"
+          class="btn-reload"
+          *ngIf="btnReload.visible && btnReload.grandAccess"
+        >
+          <i nz-icon nzType="reload" nzTheme="outline"></i>{{ btnReload.title }}
+        </button>
+        <button nz-button nzType="primary" (click)="btnAdd.click($event)" class="btn-primary" *ngIf="btnAdd.visible && btnAdd.grandAccess">
+          <i nz-icon nzType="file-add" nzTheme="fill"></i>{{ btnAdd.title }}
+        </button>
+        <button
+          nz-button
+          nz-dropdown
+          [nzDropdownMenu]="menu"
+          *ngIf="btnExportExcel.visible && btnExportExcel.grandAccess"
+          class="btn-excel"
+        >
+          <i nz-icon nzType="file-excel" nzTheme="outline"></i>
+          Excel<i nz-icon nzType="down"></i>
+        </button>
+        <nz-dropdown-menu #menu="nzDropdownMenu">
+          <ul nz-menu>
+            <li nz-menu-item>
+              <button
+                nz-button
+                nzType="primary"
+                (click)="btnExportExcel.click($event)"
+                class="btn-excel"
+                *ngIf="btnExportExcel.visible && btnExportExcel.grandAccess"
+              >
+                <i nz-icon nzType="download" nzTheme="outline"></i>{{ btnExportExcel.title }}
+              </button>
+            </li>
+          </ul>
+        </nz-dropdown-menu>
+        <button
+          nz-button
+          nzType="primary"
+          class="btn-danger"
+          (click)="btnDelete.click($event)"
+          *ngIf="btnDelete.visible && btnDelete.grandAccess"
+        >
+          <i nz-icon nzType="delete" nzTheme="fill"></i>{{ btnDelete.title }}
+        </button>
+      </nz-col>
+      <nz-col nzSm="8" nzXS="24" nzMd="8" class="pull-right padding-bottom-10">
+        <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+          <input type="text" [(ngModel)]="filter.textSearch" nz-input placeholder="Nhập từ khóa tìm kiếm" (keyup.enter)="initGridData()" />
+        </nz-input-group>
+        <ng-template #suffixIconButton>
+          <button
+            nz-button
+            nzType="default"
+            nzSearch
+            (click)="filter.ShowAdSearch = !filter.ShowAdSearch; onResetSearch(true)"
+            title="Tìm kiếm nâng cao"
+          >
+            <i nz-icon nzType="caret-down" nzTheme="outline" *ngIf="!filter.ShowAdSearch"></i>
+            <i nz-icon nzType="caret-up" nzTheme="outline" *ngIf="filter.ShowAdSearch"></i>
+          </button>
+        </ng-template>
+      </nz-col>
+    </nz-row>
+    <nz-row [hidden]="!filter.ShowAdSearch">
+      <nz-col nzSm="8" nzXS="12" nzMd="8" class="padding-bottom-10">
+        <nz-form-item class="margin-0">
+          <nz-form-label [nzSm]="8" [nzXs]="24" nzFor="status">Trạng thái</nz-form-label>
+          <nz-form-control [nzSm]="15" [nzXs]="24">
+            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Chọn trạng thái" [(ngModel)]="filter.status">
+              <nz-option *ngFor="let option of listStatus" [nzLabel]="option.name" [nzValue]="option.id"> </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+
+      <!-- <nz-col nzSm="8" nzXS="12" nzMd="8" class="padding-bottom-10">
+                <nz-form-item class="margin-0">
+                    <nz-form-label [nzSm]="8" [nzXs]="24" nzFor="status">Loại sản phẩm</nz-form-label>
+                    <nz-form-control [nzSm]="15" [nzXs]="24">
+                        <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Chọn SP cha"
+                            [(ngModel)]="filter.categoryId">
+                            <nz-option *ngFor="let option of listCategory" [nzLabel]="option['name']"
+                                [nzValue]="option['id']"> </nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+            </nz-col> -->
+
+      <nz-col nzSm="8" nzXS="12" nzMd="8" class="padding-bottom-10">
+        <button
+          nz-button
+          nzType="primary"
+          (click)="btnSearch.click($event)"
+          class="btn-success"
+          *ngIf="btnSearch.visible && btnSearch.grandAccess"
+        >
+          <i nz-icon nzType="search" nzTheme="outline"></i>{{ btnSearch.title }}
+        </button>
+        <!-- <button
+              nz-button
+              nzType="primary"
+              (click)="btnResetSearch.click($event)"
+              class="btn-warning"
+              *ngIf="btnResetSearch.visible && btnResetSearch.grandAccess"
+            >
+              <i nz-icon nzType="reload" nzTheme="outline"></i>{{ btnResetSearch.title }}
+            </button> -->
+      </nz-col>
+    </nz-row>
+    <nz-row>
+      <ag-grid-angular
+        #agGrid
+        style="width: 100%; height: 70vh"
+        id="unit-grid"
+        class="ag-theme-alpine"
+        [modules]="modules"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        [suppressRowClickSelection]="true"
+        [rowSelection]="rowSelection"
+        [rowData]="grid.rowData"
+        (selectionChanged)="onSelectionChanged($event)"
+        (cellDoubleClicked)="onCellDoubleClicked($event)"
+        [overlayLoadingTemplate]="overlayLoadingTemplate"
+        [overlayNoRowsTemplate]="overlayNoRowsTemplate"
+        [frameworkComponents]="frameworkComponents"
+        [excelStyles]="excelStyles"
+        (gridReady)="onGridReady($event)"
+      >
+      </ag-grid-angular>
+      <hr />
+    </nz-row>
+    <app-ag-grid-pagination
+      [grid]="grid"
+      [filter]="filter"
+      [pageSizeOptions]="pageSizeOptions"
+      (pageNumberChange)="onPageNumberChange()"
+      (pageSizeChange)="onPageSizeChange()"
+    ></app-ag-grid-pagination>
+  </nz-card>
+</page-header-wrapper>
+
+<app-category-meta-item
+  #itemModal
+  [isVisible]="modal.isShow"
+  [item]="modal.item"
+  [type]="modal.type"
+  [option]="modal.option"
+  (eventEmmit)="onModalEventEmmit($event)"
+>
+</app-category-meta-item>
+
+<delete-modal #deleteModal [isVisible]="isShowDelete" (eventEmmit)="onDeleteEventEmmit($event)"></delete-modal>

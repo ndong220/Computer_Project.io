@@ -1,0 +1,161 @@
+<section id="aa-myaccount">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="aa-myaccount-area">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="aa-myaccount-register">
+                <h4>Đăng ký tài khoản</h4>
+                <form nz-form [formGroup]="formRegister" (ngSubmit)="submitForm()">
+                  <nz-form-item>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="username" nzRequired>Tên tài khoản</nz-form-label>
+                    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Vui lòng nhập tên tài khoản!">
+                      <input nz-input id="username" formControlName="username" placeholder="Tên tài khoản" />
+                    </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="password" nzRequired>Mật khẩu</nz-form-label>
+                    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Vui lòng nhập mật khẩu!">
+                      <nz-input-group [nzSuffix]="suffixTemplate">
+                        <input
+                          (ngModelChange)="updateConfirmValidator()"
+                          [type]="passwordVisible ? 'text' : 'password'"
+                          nz-input
+                          placeholder="Mật khẩu"
+                          formControlName="password"
+                        />
+                      </nz-input-group>
+                      <ng-template #suffixTemplate>
+                        <i nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'" (click)="passwordVisible = !passwordVisible"></i>
+                      </ng-template>
+                    </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="checkPassword" nzRequired>Xác nhận mật khẩu </nz-form-label>
+                    <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="errorTpl">
+                      <nz-input-group [nzSuffix]="confirmPasswordTemplate">
+                        <input
+                          [type]="checkPasswordVisible ? 'text' : 'password'"
+                          nz-input
+                          placeholder="Xác nhận mật khẩu"
+                          formControlName="checkPassword"
+                        />
+                      </nz-input-group>
+                      <ng-template #confirmPasswordTemplate>
+                        <i
+                          nz-icon
+                          [nzType]="checkPasswordVisible ? 'eye-invisible' : 'eye'"
+                          (click)="checkPasswordVisible = !checkPasswordVisible"
+                        ></i>
+                      </ng-template>
+                      <ng-template #errorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')"> Vui lòng nhập mật khẩu! </ng-container>
+                        <ng-container *ngIf="control.hasError('confirm')"> Hai mật khẩu vừa nhập không giống nhau! </ng-container>
+                      </ng-template>
+                    </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="email">E-mail</nz-form-label>
+                    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="không đúng định dạng E-mail!">
+                      <input nz-input placeholder="Email" formControlName="email" id="email" />
+                    </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="nickname" nzRequired>
+                      <span>Tên</span>
+                    </nz-form-label>
+                    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Nhập vào tên!">
+                      <input nz-input id="nickname" placeholder="Tên" formControlName="nickname" />
+                    </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="phoneNumber" nzRequired>Số điện thoại</nz-form-label>
+                    <nz-form-control
+                      [nzSm]="14"
+                      [nzXs]="24"
+                      [nzValidateStatus]="formRegister.controls['phoneNumber']"
+                      nzErrorTip="Vui lòng nhập số điện thoại!"
+                    >
+                      <nz-input-group [nzAddOnBefore]="addOnBeforeTemplate">
+                        <ng-template #addOnBeforeTemplate>
+                          <nz-select formControlName="phoneNumberPrefix" class="phone-select">
+                            <nz-option nzLabel="+84" nzValue="+84"></nz-option>
+                          </nz-select>
+                        </ng-template>
+                        <input formControlName="phoneNumber" id="'phoneNumber'" nz-input />
+                      </nz-input-group>
+                    </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="sex" nzRequired>Giới tinh</nz-form-label>
+                    <nz-form-control
+                      [nzSm]="14"
+                      [nzXs]="24"
+                      [nzValidateStatus]="formRegister.controls['sex']"
+                      nzErrorTip="Vui lòng chọn giới tính!"
+                    >
+                      <nz-radio-group formControlName="sex">
+                        <label nz-radio [nzValue]="true">Nam</label>
+                        <label nz-radio [nzValue]="false">Nữ</label>
+                      </nz-radio-group>
+                    </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="dateOfBirth" nzRequired>
+                      <span>Ngày sinh</span>
+                    </nz-form-label>
+                    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Nhập vào ngày sinh!">
+                      <nz-date-picker
+                        style="width: 60%"
+                        [nzPlaceHolder]="'Nhập vào ngày sinh'"
+                        formControlName="dateOfBirth"
+                      ></nz-date-picker>
+                    </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="recaptcha" nzRequired>Captcha: </nz-form-label>
+                    <nz-form-control
+                      [nzSm]="14"
+                      [nzXs]="24"
+                      [nzValidateStatus]="formRegister.controls['recaptcha']"
+                      nzErrorTip="Trường này là bắt buộc!"
+                    >
+                      <ngx-recaptcha2
+                        #captchaElem
+                        [siteKey]="reCaptchaKey"
+                        [useGlobalDomain]="false"
+                        [size]="'normal'"
+                        [hl]="'vi'"
+                        [theme]="'light'"
+                        [type]="'image'"
+                        formControlName="recaptcha"
+                      >
+                      </ngx-recaptcha2>
+                    </nz-form-control>
+                  </nz-form-item>
+
+                  <nz-form-item nz-row class="register-area">
+                    <nz-form-control nzErrorTip="Vui lòng xác nhận" [nzSpan]="14" [nzOffset]="6">
+                      <label nz-checkbox formControlName="agree">
+                        <span>
+                          Tôi đồng ý với các
+                          <a>điều khoản</a>
+                        </span>
+                      </label>
+                    </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-item nz-row class="register-area">
+                    <nz-form-control [nzSpan]="14" [nzOffset]="6">
+                      <button nz-button nzType="primary">Đăng ký</button>
+                    </nz-form-control>
+                  </nz-form-item>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
